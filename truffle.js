@@ -33,8 +33,8 @@ module.exports = {
     test: {
       host: 'localhost',
       port: 8545,
-      network_id: '*',
-      gasPrice: 0x01
+      network_id: 213,
+      from: '0x92764CF5cc09B6345cf7D4b05AB3bF59052E2c01'
     },
     rinkeby: {
       provider,

@@ -2,16 +2,11 @@ const fs = require('fs-extra')
 const ora = require('ora')
 const chalk = require('chalk')
 
-const {
-  RECORD_PATH
-} = require('./constants')
-
 async function saveIdentity({
   username,
   publicKey,
   privateKey,
-  identityPath,
-  records
+  identityPath
 }) {
   const identitySpinner = ora('Saving identity').start()
   const identity = {
@@ -23,7 +18,6 @@ async function saveIdentity({
     await fs.writeJSON(identityPath, identity, {
       spaces: '    '
     })
-    await fs.writeJSON(RECORD_PATH, records)
     identitySpinner.succeed(`Identity saved at: ${identityPath}`)
   } catch (err) {
     identitySpinner.fail('Fail to save identity')

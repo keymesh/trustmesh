@@ -89,8 +89,37 @@
       "links": {},
       "address": "0x3ac1ca81bd47f6ae3767663806e95ec49243b4d9",
       "updated_at": 1505207310647
+    },
+    "213": {
+      "events": {
+        "0x7a551c9eefcad6d8644ab02fc727d329972c4a9245bde4206e861b27e1934f2b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "name",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "name": "publicKey",
+              "type": "bytes32"
+            }
+          ],
+          "name": "Publish",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xb60b87bf4762a06137de1cffab5be85c980f30b1",
+      "updated_at": 1505376417886
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1505215209393
+  "updated_at": 1505376417886
 }

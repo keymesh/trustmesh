@@ -41,10 +41,10 @@ async function handleRegister({
   privateKey = sodium.to_hex(privateKey)
 
   const identityPath = path.resolve(os.homedir(), `.trustbase/idents/${usernameHash}.json`)
-  if ((await fs.exists(identityPath))) {
-    ora().info(`Found identity for ${username} locally`)
-    return
-  }
+  // if ((await fs.exists(identityPath))) {
+  //   ora().info(`Found identity for ${username} locally`)
+  //   return
+  // }
 
   const records = (await fs.exists(RECORD_PATH)) ? (await fs.readJSON(RECORD_PATH)) : {}
   if (records[username]) {
@@ -82,19 +82,24 @@ async function handleRegister({
       }
       waitTxSpinner.start()
     })
-    .on('receipt', async () => {
-      waitTxSpinner.succeed('Registration success!')
-      await saveIdentity({
-        username,
-        publicKey,
-        privateKey,
-        identityPath,
-        records
-      })
+    .on('receipt', async (r) => {
+      await fs.writeJSON(RECORD_PATH, records)
+      if (r.events.Publish) {
+        waitTxSpinner.succeed('Registration success!')
+        await saveIdentity({
+          username,
+          publicKey,
+          privateKey,
+          identityPath
+        })
+      } else {
+        waitTxSpinner.fail('Username already registered. Try another account name.')
+      }
     })
-    .on('error', (err) => {
+    .on('error', async (err) => {
       if (err.message.search('invalid opcode')) {
         transactionSpinner.fail('Username already registered. Try another account name.')
+        await fs.writeJSON(RECORD_PATH, records)
       } else {
         transactionSpinner.fail('Unexpected error:')
         console.error(err)

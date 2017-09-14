@@ -25,7 +25,7 @@ async function handleCheckRegister({
   if (hash) {
     const _username = usernames.find(name => records[name].hash === hash)
     if (!_username) {
-      ora().fail(`Register record for transaction hash(${hash}) was not found on your machine`)
+      ora().fail(`Register record for transaction(${hash}) was not found on your machine`)
       return
     }
     username = _username
@@ -45,18 +45,18 @@ async function handleCheckRegister({
 
   const usernameHash = web3.utils.sha3(username)
   const identityPath = path.resolve(os.homedir(), `.trustbase/idents/${usernameHash}.json`)
-  if ((await fs.exists(identityPath))) {
-    ora().succeed(`Found identity for ${username} locally`)
-    return
-  }
+  // if ((await fs.exists(identityPath))) {
+  //   ora().succeed(`Found identity for ${username} locally`)
+  //   return
+  // }
 
   if (!records[username]) {
-    ora().warn(`Register record for username('${username}') was not found on your machine`)
+    ora().warn(`Register record for '${username}' was not found on your machine`)
     const publicKey = await trustbase.methods.publicKeyOf(usernameHash).call()
     if (Number(publicKey) === 0) {
-      ora().info(`Username('${username}') has not been registered`)
+      ora().info(`'${username}' has not been registered`)
     } else {
-      ora().info(`Username('${username}') is already registered`)
+      ora().info(`'${username}' is already registered`)
     }
     return
   }
@@ -74,14 +74,18 @@ async function handleCheckRegister({
     const receipt = await web3.eth.getTransactionReceipt(hash)
     if (receipt !== null) {
       delete records[username]
-      waitTxSpinner.succeed('Registration success!')
-      await saveIdentity({
-        username,
-        publicKey,
-        privateKey,
-        identityPath,
-        records
-      })
+      await fs.writeJSON(RECORD_PATH, records)
+      if (receipt.logs.length > 0) {
+        waitTxSpinner.succeed('Registration success!')
+        await saveIdentity({
+          username,
+          publicKey,
+          privateKey,
+          identityPath
+        })
+      } else {
+        waitTxSpinner.fail('Username already registered. Try another account name.')
+      }
       return
     }
 
