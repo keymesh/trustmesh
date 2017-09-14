@@ -1,0 +1,13 @@
+.idea/
+.vscode/
+node_modules/
+npm-debug.log
+yarn-error.log
+secrets.json
+.DS_Store
+*.DS_Store
+*.logs
+*.swp
+*.swo
+tsconfig.json
+jsconfig.json

@@ -1,0 +1,96 @@
+{
+  "contract_name": "TrustBase",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "name",
+          "type": "bytes32"
+        }
+      ],
+      "name": "publicKeyOf",
+      "outputs": [
+        {
+          "name": "",
+          "type": "bytes32"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "name",
+          "type": "bytes32"
+        },
+        {
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "publishKey",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "from",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "name": "name",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "Publish",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6101c88061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416639e7af3008114610048578063db29d88114610070575b600080fd5b341561005357600080fd5b61005e60043561008b565b60405190815260200160405180910390f35b341561007b57600080fd5b6100896004356024356100a3565b005b6000818152602081905260409020600101545b919050565b60008281526020819052604090205473ffffffffffffffffffffffffffffffffffffffff16156100d257600080fd5b60408051908101604090815273ffffffffffffffffffffffffffffffffffffffff331682526020808301849052600085815290819052208151815473ffffffffffffffffffffffffffffffffffffffff191673ffffffffffffffffffffffffffffffffffffffff919091161781556020820151600190910155508173ffffffffffffffffffffffffffffffffffffffff33167f7a551c9eefcad6d8644ab02fc727d329972c4a9245bde4206e861b27e1934f2b8360405190815260200160405180910390a35b50505600a165627a7a7230582053e197cf506d5009e44f9042293d6e3b6a3b6df88b0a1c6ec2a8e0eda0e84e7b0029",
+  "networks": {
+    "4": {
+      "events": {
+        "0x7a551c9eefcad6d8644ab02fc727d329972c4a9245bde4206e861b27e1934f2b": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "from",
+              "type": "address"
+            },
+            {
+              "indexed": true,
+              "name": "name",
+              "type": "bytes32"
+            },
+            {
+              "indexed": false,
+              "name": "publicKey",
+              "type": "bytes32"
+            }
+          ],
+          "name": "Publish",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x3ac1ca81bd47f6ae3767663806e95ec49243b4d9",
+      "updated_at": 1505207310647
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1505215209393
+}
