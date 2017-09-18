@@ -28,7 +28,7 @@ async function handleRegister({
   const username = argv._.length > 1 ? argv._[1] : (await inquirer.prompt(usernamePrompt)).username
   if (username === '') {
     ora().fail('Invalid username')
-    return
+    process.exit(1)
   }
 
   const usernameHash = web3.utils.sha3(username)
@@ -41,10 +41,10 @@ async function handleRegister({
   privateKey = sodium.to_hex(privateKey)
 
   const identityPath = path.resolve(os.homedir(), `.trustbase/idents/${usernameHash}.json`)
-  // if ((await fs.exists(identityPath))) {
-  //   ora().info(`Found identity for ${username} locally`)
-  //   return
-  // }
+  if ((await fs.exists(identityPath))) {
+    ora().info(`Found identity for '${username}' locally`)
+    process.exit(0)
+  }
 
   const records = (await fs.exists(RECORD_PATH)) ? (await fs.readJSON(RECORD_PATH)) : {}
   if (records[username]) {
@@ -59,10 +59,19 @@ async function handleRegister({
     return
   }
 
+  const pK = await trustbase.methods.publicKeyOf(usernameHash).call()
+
+  if (Number(pK) !== 0) {
+    ora().fail('Username already registered. Try another account name.')
+    process.exit(1)
+  }
+
   const transactionSpinner = ora('Creating transaction').start()
   const waitTxSpinner = ora('Waiting for transaction')
 
-  trustbase.methods.publishKey(usernameHash, publicKey).send()
+  trustbase.methods.publishKey(usernameHash, publicKey).send({
+    gas: 100000
+  })
     .on('transactionHash', (hash) => {
       transactionSpinner.succeed(`Transaction created: ${hash}`)
       const recordSpinner = ora('Saving register record').start()
@@ -83,6 +92,7 @@ async function handleRegister({
       waitTxSpinner.start()
     })
     .on('receipt', async (r) => {
+      fs.ensureFileSync(RECORD_PATH)
       await fs.writeJSON(RECORD_PATH, records)
       if (r.events.Publish) {
         waitTxSpinner.succeed('Registration success!')
@@ -95,15 +105,19 @@ async function handleRegister({
       } else {
         waitTxSpinner.fail('Username already registered. Try another account name.')
       }
+
+      process.exit(0)
     })
     .on('error', async (err) => {
-      if (err.message.search('invalid opcode')) {
+      fs.ensureFileSync(RECORD_PATH)
+      await fs.writeJSON(RECORD_PATH, records)
+      if (err.message.search('invalid opcode') !== -1) {
         transactionSpinner.fail('Username already registered. Try another account name.')
-        await fs.writeJSON(RECORD_PATH, records)
       } else {
         transactionSpinner.fail('Unexpected error:')
-        console.error(err)
+        console.error(err.message)
       }
+      process.exit(1)
     })
 }
 

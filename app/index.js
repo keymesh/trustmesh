@@ -1,12 +1,12 @@
 #!/usr/bin/env node
 const yargs = require('yargs')
 const Web3 = require('web3')
-const HDWalletProvider = require('truffle-hdwallet-provider')
 const inquirer = require('inquirer')
 const hardRejection = require('hard-rejection')
 
 hardRejection()
 
+const HDWalletProvider = require('./provider')
 const register = require('./register')
 const checkRegister = require('./check-register')
 const info = require('./info')
@@ -52,19 +52,20 @@ const argv = yargs
   .options({
     address: {
       alias: 'a',
-      describe: 'trustbase contract deployed address'
+      describe: 'trustbase contract deployed address',
+      string: true
     },
     provider: {
       alias: 'p',
-      default: 'http://localhost:8545',
       describe: 'RPC provider url'
     },
     from: {
       alias: 'f',
-      describe: 'account address'
+      describe: 'account address',
+      string: true
     },
     mnemonic: {
-      alias: 'n',
+      alias: 'm',
       describe: 'mnemonic for HD Wallet'
     },
     index: {
@@ -84,7 +85,7 @@ async function setup() {
   if (argv.provider) {
     provider = (
       argv.mnemonic
-        ? new HDWalletProvider(argv.mnemonic, argv.provider, argv.index || 0)
+        ? new HDWalletProvider(argv.mnemonic, argv.provider, argv.index)
         : argv.provider
     )
   }
@@ -121,14 +122,24 @@ async function setup() {
         name: 'getAccounts',
         call: 'eth_accounts'
       }]
-    });
+    })
 
-    ({ from } = await inquirer.prompt([{
-      type: 'list',
-      name: 'from',
-      message: 'Select your account:',
-      choices: await web3.eth.getAccounts()
-    }]))
+    const accounts = await web3.eth.getAccounts()
+
+    if (accounts.length === 0) {
+      throw new Error('No account found')
+    }
+
+    if (accounts.length === 1) {
+      from = accounts[0]
+    } else {
+      ({ from } = await inquirer.prompt([{
+        type: 'list',
+        name: 'from',
+        message: 'Select your account:',
+        choices: accounts
+      }]))
+    }
   }
 
   const trustbase = new web3.eth.Contract(abi, address, {
@@ -141,24 +152,25 @@ async function setup() {
   }
 }
 
-setup().then(({
-  web3,
-  trustbase
-}) => {
-  const handlerOptions = {
-    argv,
-    inquirer,
+setup()
+  .then(({
     web3,
     trustbase
-  }
-  switch (argv._[0]) {
-    case 'register':
-      return register(handlerOptions)
-    case 'check-register':
-      return checkRegister(handlerOptions)
-    case 'info':
-      return info(handlerOptions)
-    default:
-      return yargs.showHelp()
-  }
-})
+  }) => {
+    const handlerOptions = {
+      argv,
+      inquirer,
+      web3,
+      trustbase
+    }
+    switch (argv._[0]) {
+      case 'register':
+        return register(handlerOptions)
+      case 'check-register':
+        return checkRegister(handlerOptions)
+      case 'info':
+        return info(handlerOptions)
+      default:
+        return yargs.showHelp()
+    }
+  })

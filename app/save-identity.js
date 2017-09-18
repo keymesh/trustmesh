@@ -18,10 +18,10 @@ async function saveIdentity({
     await fs.writeJSON(identityPath, identity, {
       spaces: '    '
     })
-    identitySpinner.succeed(`Identity saved at: ${identityPath}`)
+    identitySpinner.succeed('Identity saved')
   } catch (err) {
     identitySpinner.fail('Fail to save identity')
-    console.log(chalk.bgYellow.black('IMPORTANT: Please save your identity manually!'))
+    console.log(chalk.bgYellow.black('\nIMPORTANT: Please save your identity manually!'))
     console.log(JSON.stringify(identity, null, '    '))
   }
 }

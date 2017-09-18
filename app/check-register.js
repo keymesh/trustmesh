@@ -26,7 +26,7 @@ async function handleCheckRegister({
     const _username = usernames.find(name => records[name].hash === hash)
     if (!_username) {
       ora().fail(`Register record for transaction(${hash}) was not found on your machine`)
-      return
+      process.exit(0)
     }
     username = _username
   } else if (argv._.length > 1) {
@@ -40,15 +40,15 @@ async function handleCheckRegister({
     }]))
   } else {
     ora().fail('No register record found')
-    return
+    process.exit(0)
   }
 
   const usernameHash = web3.utils.sha3(username)
   const identityPath = path.resolve(os.homedir(), `.trustbase/idents/${usernameHash}.json`)
-  // if ((await fs.exists(identityPath))) {
-  //   ora().succeed(`Found identity for ${username} locally`)
-  //   return
-  // }
+  if ((await fs.exists(identityPath))) {
+    ora().succeed(`Found identity for '${username}' locally`)
+    process.exit(0)
+  }
 
   if (!records[username]) {
     ora().warn(`Register record for '${username}' was not found on your machine`)
@@ -58,7 +58,7 @@ async function handleCheckRegister({
     } else {
       ora().info(`'${username}' is already registered`)
     }
-    return
+    process.exit(0)
   }
 
   hash = hash || records[username].hash
@@ -86,7 +86,7 @@ async function handleCheckRegister({
       } else {
         waitTxSpinner.fail('Username already registered. Try another account name.')
       }
-      return
+      process.exit(0)
     }
 
     setTimeout(waitForTransactionReceipt, 1000)

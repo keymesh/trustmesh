@@ -18,7 +18,7 @@ async function handleInfo({
 
   if (username === '') {
     ora().fail('Invalid username')
-    return
+    process.exit(1)
   }
 
   const usernameHash = web3.utils.sha3(username)
@@ -31,6 +31,8 @@ async function handleInfo({
       publicKey
     }, null, '    '))
   }
+
+  process.exit(0)
 }
 
 module.exports = handleInfo
