@@ -2,7 +2,8 @@
   "globals": {
     "artifacts": true,
     "contract": true,
-    "assert": true
+    "assert": true,
+    "web3": true
   },
   "env": {
     "mocha": true

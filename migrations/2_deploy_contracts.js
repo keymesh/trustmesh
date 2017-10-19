@@ -1,5 +1,6 @@
-const TrustBase = artifacts.require("./TrustBase.sol");
+const TrustBase = artifacts.require('./TrustBase.sol')
+const PrekeyStore = artifacts.require('./PrekeyStore.sol')
 
-module.exports = function(deployer) {
-  deployer.deploy(TrustBase);
-};
+module.exports = (deployer) => {
+  deployer.deploy(TrustBase).then(() => deployer.deploy(PrekeyStore, TrustBase.address))
+}

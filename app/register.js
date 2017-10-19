@@ -59,7 +59,7 @@ async function handleRegister({
     return
   }
 
-  const pK = await trustbase.methods.publicKeyOf(usernameHash).call()
+  const pK = await trustbase.methods.getIdentity(usernameHash).call()
 
   if (Number(pK) !== 0) {
     ora().fail('Username already registered. Try another account name.')
@@ -69,7 +69,7 @@ async function handleRegister({
   const transactionSpinner = ora('Creating transaction').start()
   const waitTxSpinner = ora('Waiting for transaction')
 
-  trustbase.methods.publishKey(usernameHash, publicKey).send({
+  trustbase.methods.register(usernameHash, publicKey).send({
     gas: 100000
   })
     .on('transactionHash', (hash) => {

@@ -31,6 +31,8 @@ async function handleCheckRegister({
     username = _username
   } else if (argv._.length > 1) {
     username = argv._[1]
+  } else if (usernames.length === 1) {
+    username = usernames[0]
   } else if (usernames.length > 0) {
     ({ username } = await inquirer.prompt([{
       type: 'list',
@@ -52,7 +54,7 @@ async function handleCheckRegister({
 
   if (!records[username]) {
     ora().warn(`Register record for '${username}' was not found on your machine`)
-    const publicKey = await trustbase.methods.publicKeyOf(usernameHash).call()
+    const publicKey = await trustbase.methods.getIdentity(usernameHash).call()
     if (Number(publicKey) === 0) {
       ora().info(`'${username}' has not been registered`)
     } else {

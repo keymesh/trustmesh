@@ -1,22 +1,26 @@
 pragma solidity ^0.4.0;
 
 contract TrustBase {
-	event Publish(address indexed from, bytes32 indexed name, bytes32 publicKey);
+  event Register(address indexed from, bytes32 indexed nameHash, bytes32 identityKey);
 
-	struct PublicKey {
-		address owner;
-		bytes32 value;
-	}
+  struct Account {
+    address owner;
+    bytes32 identityKey;
+  }
 
-	mapping (bytes32 => PublicKey) publicKeys;
+  mapping (bytes32 => Account) accounts;
 
-	function publishKey(bytes32 name, bytes32 publicKey) {
-		require(publicKeys[name].owner == 0);
-		publicKeys[name] = PublicKey(msg.sender, publicKey);
-		Publish(msg.sender, name, publicKey);
-	}
+  function isOwner(address msgSender, bytes32 nameHash) constant returns (bool) {
+    return msgSender == accounts[nameHash].owner;
+  }
 
-	function publicKeyOf(bytes32 name) constant returns (bytes32) {
-		return publicKeys[name].value;
-	}
+  function register(bytes32 nameHash, bytes32 identityKey) {
+    require(accounts[nameHash].owner == 0);
+    accounts[nameHash] = Account(msg.sender, identityKey);
+    Register(msg.sender, nameHash, identityKey);
+  }
+
+  function getIdentity(bytes32 nameHash) constant returns (bytes32) {
+    return accounts[nameHash].identityKey;
+  }
 }

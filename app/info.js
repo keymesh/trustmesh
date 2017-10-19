@@ -22,7 +22,7 @@ async function handleInfo({
   }
 
   const usernameHash = web3.utils.sha3(username)
-  const publicKey = await trustbase.methods.publicKeyOf(usernameHash).call()
+  const publicKey = await trustbase.methods.getIdentity(usernameHash).call()
   if (Number(publicKey) === 0) {
     ora().info(`Username('${username}') not found`)
   } else {
