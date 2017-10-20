@@ -1,9 +1,9 @@
 pragma solidity ^0.4.0;
 
-import {TrustBase} from 'contracts/TrustBase.sol';
+import {Trustbase} from 'contracts/Trustbase.sol';
 
-contract PrekeyStore {
-  TrustBase trustBase;
+contract PreKeyStore {
+  Trustbase trustbase;
 
   struct Prekeys {
     mapping (uint => bytes32) prekeys;
@@ -14,13 +14,13 @@ contract PrekeyStore {
   mapping (bytes32 => Prekeys) accounts;
 
   modifier onlyOwner(bytes32 nameHash) {
-    require(trustBase.isOwner(msg.sender, nameHash));
+    require(trustbase.isOwner(msg.sender, nameHash));
     _;
   }
 
-  function PrekeyStore(address trustbaseAddress) {
+  function PreKeyStore(address trustbaseAddress) {
     require(trustbaseAddress != 0);
-    trustBase = TrustBase(trustbaseAddress);
+    trustbase = Trustbase(trustbaseAddress);
   }
 
   function addPrekeys(

@@ -1,6 +1,6 @@
 pragma solidity ^0.4.0;
 
-contract TrustBase {
+contract Trustbase {
   event Register(address indexed from, bytes32 indexed nameHash, bytes32 identityKey);
 
   struct Account {

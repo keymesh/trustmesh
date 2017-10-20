@@ -1,11 +1,11 @@
 const expectThrow = require('./utils').expectThrow
-const TrustBase = artifacts.require('TrustBase')
-const PrekeyStore = artifacts.require('PrekeyStore')
+const Trustbase = artifacts.require('Trustbase')
+const PreKeyStore = artifacts.require('PreKeyStore')
 const sha3 = require('web3').utils.sha3
 
 const bytes32Zero = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
-contract('PrekeyStore', (accounts) => {
+contract('PreKeyStore', (accounts) => {
   const today = Math.floor(new Date().getTime() / 1000 / 3600 / 24)
   const nameHash = sha3('ceoimon')
   const nameHash2 = sha3('howard')
@@ -25,9 +25,9 @@ contract('PrekeyStore', (accounts) => {
   ]
 
   it('should add prekeys successfully', async () => {
-    const trustBase = await TrustBase.new()
-    await trustBase.register(nameHash, _publicKey, { from: accounts[0] })
-    const prekeyStore = await PrekeyStore.new(trustBase.address)
+    const trustbase = await Trustbase.new()
+    await trustbase.register(nameHash, _publicKey, { from: accounts[0] })
+    const prekeyStore = await PreKeyStore.new(trustbase.address)
 
     await prekeyStore.addPrekeys(nameHash, _prekeys, today, 1, { from: accounts[0] })
 
@@ -42,10 +42,10 @@ contract('PrekeyStore', (accounts) => {
   })
 
   it('should fail when trying to add prekeys by person who is not the owner', async () => {
-    const trustBase = await TrustBase.new()
-    await trustBase.register(nameHash, _publicKey, { from: accounts[0] })
-    await trustBase.register(nameHash2, _publicKey2, { from: accounts[1] })
-    const prekeyStore = await PrekeyStore.new(trustBase.address)
+    const trustbase = await Trustbase.new()
+    await trustbase.register(nameHash, _publicKey, { from: accounts[0] })
+    await trustbase.register(nameHash2, _publicKey2, { from: accounts[1] })
+    const prekeyStore = await PreKeyStore.new(trustbase.address)
 
     const now = new Date()
     const timestampOfDay = new Date(
@@ -64,9 +64,9 @@ contract('PrekeyStore', (accounts) => {
   })
 
   it('should delete old prekeys when trying to replace prekeys', async () => {
-    const trustBase = await TrustBase.new()
-    await trustBase.register(nameHash, _publicKey, { from: accounts[0] })
-    const prekeyStore = await PrekeyStore.new(trustBase.address)
+    const trustbase = await Trustbase.new()
+    await trustbase.register(nameHash, _publicKey, { from: accounts[0] })
+    const prekeyStore = await PreKeyStore.new(trustbase.address)
 
     // [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]
     await prekeyStore.addPrekeys(

@@ -1,9 +1,11 @@
-const setup = require('./setup')
-const TrustBase = require('./trustBase')
-const PrekeyStore = require('./prekeyStore')
+const { configure } = require('./web3')
+const Trustbase = require('./Trustbase')
+const PreKeyStore = require('./PreKeyStore')
+const Messages = require('./Messages')
 
 module.exports = {
-  setup,
-  TrustBase,
-  PrekeyStore
+  configure,
+  Trustbase,
+  PreKeyStore,
+  Messages
 }
