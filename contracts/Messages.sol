@@ -1,14 +1,31 @@
 pragma solidity ^0.4.0;
 
-contract Messages {
-  uint createdBlockNumber;
-  event Publish(bytes message);
+import {Trustbase} from 'contracts/Trustbase.sol';
 
-  function Messages() {
+contract Messages {
+  Trustbase trustbase;
+  uint createdBlockNumber;
+
+  event Publish(bytes32 indexed messageTypeHash, bytes32 senderUserHash, bytes message, uint timestamp);
+
+  modifier onlyOwner(bytes32 nameHash) {
+    require(trustbase.isOwner(msg.sender, nameHash));
+    _;
+  }
+
+  function Messages(address trustbaseAddress) {
+    require(trustbaseAddress != 0);
+    trustbase = Trustbase(trustbaseAddress);
     createdBlockNumber = block.number;
   }
 
-  function publish(bytes message) {
-    Publish(message);
+  function publish(
+    bytes32 messageTypeHash,
+    bytes32 senderUserHash,
+    bytes message
+  )
+    onlyOwner(senderUserHash)
+  {
+    Publish(messageTypeHash, senderUserHash, message, now);
   }
 }

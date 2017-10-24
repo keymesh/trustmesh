@@ -2,7 +2,7 @@ const {
   contract_name: contractName,
   abi,
   networks
-} = require('../build/contracts/Trustbase')
+} = require('../build/contracts/Trustbase.json')
 
 const {
   getContractInstance,
@@ -10,8 +10,12 @@ const {
 } = require('./web3')
 
 class Trustbase {
-  static async new(options = { networks }) {
-    const contract = await getContractInstance(contractName, abi, options)
+  static async new(options = {}) {
+    const contract = await getContractInstance(
+      contractName,
+      abi,
+      Object.assign({ networks }, options)
+    )
     return new Trustbase(contract)
   }
 
@@ -21,19 +25,27 @@ class Trustbase {
     this.contract = contract
   }
 
-  async register(name, identityKey, options) {
-    const nameHash = this.web3.utils.sha3(name)
+  register(name, identityKey, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
 
     return this.contract.methods.register(nameHash, identityKey).send({
       gas: 100000,
-      ...options
+      ...otherOptions
     })
   }
 
-  async getIdentity(name, options) {
-    const nameHash = this.web3.utils.sha3(name)
+  getIdentity(name, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
 
-    return this.contract.methods.getIdentity(nameHash).call(options)
+    return this.contract.methods.getIdentity(nameHash).call(otherOptions)
   }
 }
 

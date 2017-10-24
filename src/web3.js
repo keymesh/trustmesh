@@ -80,10 +80,10 @@ async function getContractInstance(contractName, abi, options) {
     throw new Error('Invalid contract address')
   }
 
-  const code = await web3.eth.getCode(address)
-  if (!code || code.replace('0x', '').replace(/0/g, '') === '') {
-    throw new Error(`Cannot create instance of ${contractName}; no code at address ${address}`)
-  }
+  // const code = await web3.eth.getCode(address)
+  // if (!code || code.replace('0x', '').replace(/0/g, '') === '') {
+  //   throw new Error(`Cannot create instance of ${contractName}; no code at address ${address}`)
+  // }
 
   return new web3.eth.Contract(abi, address, {
     from: web3.eth.defaultAccount

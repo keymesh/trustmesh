@@ -22,12 +22,12 @@
     "prepublish": "npm run migrate:rinkeby"
   },
   "dependencies": {
+    "bip39": "^2.4.0",
     "ethereumjs-wallet": "^0.6.0",
     "web3": "1.0.0-beta.20",
-    "web3-provider-engine": "^13.2.9"
+    "web3-provider-engine": "^13.3.2"
   },
   "devDependencies": {
-    "add": "^2.0.6",
     "eslint": "^4.6.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",

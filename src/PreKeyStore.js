@@ -6,7 +6,7 @@ const {
   contract_name: contractName,
   abi,
   networks
-} = require('../build/contracts/PreKeyStore')
+} = require('../build/contracts/PreKeyStore.json')
 
 const {
   getContractInstance,
@@ -14,8 +14,12 @@ const {
 } = require('./web3')
 
 class PreKeyStore {
-  static async new(options = { networks }) {
-    const contract = await getContractInstance(contractName, abi, options)
+  static async new(options = {}) {
+    const contract = await getContractInstance(
+      contractName,
+      abi,
+      Object.assign({ networks }, options)
+    )
     return new PreKeyStore(contract)
   }
 
@@ -25,7 +29,7 @@ class PreKeyStore {
     this.contract = contract
   }
 
-  async uploadPrekeys(name, prekeysPublicKeys, options = {}) {
+  uploadPrekeys(name, prekeysPublicKeys, options = {}) {
     const nameHash = this.web3.utils.sha3(name)
     const {
       interval = 1,
@@ -44,13 +48,13 @@ class PreKeyStore {
     })
   }
 
-  async getPrekey(name, unixDay, options) {
+  getPrekey(name, unixDay, options) {
     const nameHash = this.web3.utils.sha3(name)
 
     return this.contract.methods.getPrekey(nameHash, unixDay).call(options)
   }
 
-  async getMetaData(name, options) {
+  getMetaData(name, options) {
     const nameHash = this.web3.utils.sha3(name)
 
     return this.contract.methods.getMetaData(nameHash).call(options)
