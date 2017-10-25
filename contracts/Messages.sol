@@ -13,7 +13,7 @@ contract Messages {
     _;
   }
 
-  function Messages(address trustbaseAddress) {
+  function Messages(address trustbaseAddress) public {
     require(trustbaseAddress != 0);
     trustbase = Trustbase(trustbaseAddress);
     createdBlockNumber = block.number;
@@ -24,6 +24,7 @@ contract Messages {
     bytes32 senderUserHash,
     bytes message
   )
+    public
     onlyOwner(senderUserHash)
   {
     Publish(messageTypeHash, senderUserHash, message, now);

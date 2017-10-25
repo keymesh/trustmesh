@@ -10,17 +10,17 @@ contract Trustbase {
 
   mapping (bytes32 => Account) accounts;
 
-  function isOwner(address msgSender, bytes32 nameHash) constant returns (bool) {
+  function isOwner(address msgSender, bytes32 nameHash) constant public returns (bool) {
     return msgSender == accounts[nameHash].owner;
   }
 
-  function register(bytes32 nameHash, bytes32 identityKey) {
+  function register(bytes32 nameHash, bytes32 identityKey) public {
     require(accounts[nameHash].owner == 0);
     accounts[nameHash] = Account(msg.sender, identityKey);
     Register(msg.sender, nameHash, identityKey);
   }
 
-  function getIdentity(bytes32 nameHash) constant returns (bytes32) {
+  function getIdentity(bytes32 nameHash) constant public returns (bytes32) {
     return accounts[nameHash].identityKey;
   }
 }

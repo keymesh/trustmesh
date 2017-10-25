@@ -36,26 +36,21 @@ class Messages {
 
   async getMessages(messageType, options) {
     const messageTypeHash = this.web3.utils.sha3(messageType)
+    const lastBlock = await this.web3.eth.getBlockNumber()
     const publishEvents = await this.contract.getPastEvents('Publish', Object.assign({}, {
       filter: { messageTypeHash },
       fromBlock: 0,
-      toBlock: 'latest'
+      toBlock: lastBlock === 0 ? 'latest' : lastBlock - 1
     }, options))
 
-    let lastBlock = 0
     const messages = publishEvents.map((event) => {
       const {
-        blockNumber,
         returnValues: {
           message,
           timestamp,
           senderUserHash
         }
       } = event
-
-      if (blockNumber > lastBlock) {
-        lastBlock = blockNumber
-      }
 
       return {
         message,

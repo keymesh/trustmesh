@@ -18,7 +18,7 @@ contract PreKeyStore {
     _;
   }
 
-  function PreKeyStore(address trustbaseAddress) {
+  function PreKeyStore(address trustbaseAddress) public {
     require(trustbaseAddress != 0);
     trustbase = Trustbase(trustbaseAddress);
   }
@@ -29,6 +29,7 @@ contract PreKeyStore {
     uint fromUnixDay,
     uint interval
   )
+    public
     onlyOwner(nameHash)
   {
     uint i = 0;
@@ -56,11 +57,11 @@ contract PreKeyStore {
     accounts[nameHash].interval = interval;
   }
 
-  function getPrekey(bytes32 nameHash, uint timestampOfDay) constant returns (bytes32) {
+  function getPrekey(bytes32 nameHash, uint timestampOfDay) constant public returns (bytes32) {
     return accounts[nameHash].prekeys[timestampOfDay];
   }
 
-  function getMetaData(bytes32 nameHash) constant returns (
+  function getMetaData(bytes32 nameHash) constant public returns (
     uint lastPrekeysDate,
     uint interval
   ) {
