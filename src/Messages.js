@@ -34,30 +34,42 @@ class Messages {
     })
   }
 
-  async getMessages(messageType, options) {
-    const messageTypeHash = this.web3.utils.sha3(messageType)
+  async getMessages(messageTypes, options) {
+    const messageTypeHashes = messageTypes.map(messageType => this.web3.utils.sha3(messageType))
     const lastBlock = await this.web3.eth.getBlockNumber()
+    const blockNumberOfContract = await this.contract.methods.blockNumber().call()
+
     const publishEvents = await this.contract.getPastEvents('Publish', Object.assign({}, {
-      filter: { messageTypeHash },
-      fromBlock: 0,
-      toBlock: lastBlock === 0 ? 'latest' : lastBlock - 1
+      filter: { messageTypeHash: messageTypeHashes },
+      fromBlock: blockNumberOfContract,
+      toBlock: lastBlock
     }, options))
 
-    const messages = publishEvents.map((event) => {
-      const {
-        returnValues: {
+    const messages = publishEvents
+      .map((event) => {
+        const {
+          blockNumber,
+          returnValues: {
+            messageTypeHash,
+            message,
+            timestamp,
+            senderUserHash
+          }
+        } = event
+
+        // pending event
+        if (!blockNumber) {
+          return null
+        }
+
+        return {
+          messageTypeHash,
           message,
           timestamp,
           senderUserHash
         }
-      } = event
-
-      return {
-        message,
-        timestamp,
-        senderUserHash
-      }
-    })
+      })
+      .filter(m => m !== null)
 
     return {
       lastBlock,

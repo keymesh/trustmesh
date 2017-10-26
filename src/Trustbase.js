@@ -38,6 +38,16 @@ class Trustbase {
     })
   }
 
+  isOwner(accountAddress, name, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+
+    return this.contract.methods.isOwner(accountAddress, nameHash).call(otherOptions)
+  }
+
   getIdentity(name, options = {}) {
     const {
       isHash,

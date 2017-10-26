@@ -4,7 +4,7 @@ import {Trustbase} from 'contracts/Trustbase.sol';
 
 contract Messages {
   Trustbase trustbase;
-  uint createdBlockNumber;
+  uint public blockNumber;
 
   event Publish(bytes32 indexed messageTypeHash, bytes32 senderUserHash, bytes message, uint timestamp);
 
@@ -16,7 +16,7 @@ contract Messages {
   function Messages(address trustbaseAddress) public {
     require(trustbaseAddress != 0);
     trustbase = Trustbase(trustbaseAddress);
-    createdBlockNumber = block.number;
+    blockNumber = block.number;
   }
 
   function publish(

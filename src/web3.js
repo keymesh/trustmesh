@@ -30,17 +30,20 @@ async function configure(options = {}) {
 
   web3 = new Web3(isDev ? 'http://localhost:8545' : provider)
 
+  const accounts = await web3.eth.getAccounts()
   let defaultAccount = options.defaultAccount
-  let accounts = [defaultAccount]
-  if (!defaultAccount) {
+
+  if (defaultAccount) {
+    if (accounts.indexOf(defaultAccount) === -1) {
+      throw new Error('Invalid account address')
+    }
+  } else {
     web3.eth.extend({
       methods: [{
         name: 'getAccounts',
         call: 'eth_accounts'
       }]
     })
-
-    accounts = await web3.eth.getAccounts()
 
     if (accounts.length === 0) {
       throw new Error('No account found')

@@ -1,14 +1,13 @@
 const expectThrow = require('./utils').expectThrow
 const Trustbase = artifacts.require('Trustbase')
 const PreKeyStore = artifacts.require('PreKeyStore')
-const sha3 = require('web3').utils.sha3
 
 const bytes32Zero = '0x0000000000000000000000000000000000000000000000000000000000000000'
 
 contract('PreKeyStore', (accounts) => {
   const today = Math.floor(new Date().getTime() / 1000 / 3600 / 24)
-  const nameHash = sha3('ceoimon')
-  const nameHash2 = sha3('howard')
+  const nameHash = web3.sha3('ceoimon')
+  const nameHash2 = web3.sha3('howard')
   const _publicKey = '0x4f03aecc73addb254c219b054b1b08418d7d9af5af663ffaaa38c07f30f34506'
   const _publicKey2 = '0x4f03aecc73addb254c219b054b1b08418d7d9af5af663ffaaa38c07f30f34507'
   const _prekeys = [
