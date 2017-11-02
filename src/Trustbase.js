@@ -34,6 +34,7 @@ class Trustbase {
 
     return this.contract.methods.register(nameHash, identityKey).send({
       gas: 100000,
+      gasPrice: 20000000000, // 20 Gwei for test
       ...otherOptions
     })
   }

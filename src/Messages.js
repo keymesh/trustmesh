@@ -25,12 +25,17 @@ class Messages {
     this.contract = contract
   }
 
-  publish(messageType, username, message, options) {
+  publish(messageType, username, message, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const usernameHash = isHash ? username : this.web3.utils.sha3(username)
     const messageTypeHash = this.web3.utils.sha3(messageType)
-    const usernameHash = this.web3.utils.sha3(username)
     return this.contract.methods.publish(messageTypeHash, usernameHash, message).send({
-      gas: 100000,
-      ...options
+      gas: 200000,
+      gasPrice: 20000000000, // 20 Gwei for test
+      ...otherOptions
     })
   }
 

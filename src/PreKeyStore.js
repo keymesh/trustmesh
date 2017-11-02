@@ -30,12 +30,13 @@ class PreKeyStore {
   }
 
   uploadPrekeys(name, prekeysPublicKeys, options = {}) {
-    const nameHash = this.web3.utils.sha3(name)
     const {
+      isHash,
       interval = 1,
       fromUnixDay = getUnixToday(),
       ...otherOptions
     } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
 
     return this.contract.methods.addPrekeys(
       nameHash,
@@ -44,20 +45,29 @@ class PreKeyStore {
       interval
     ).send({
       gas: 4712380,
+      gasPrice: 20000000000, // 20 Gwei for test
       ...otherOptions
     })
   }
 
-  getPrekey(name, unixDay, options) {
-    const nameHash = this.web3.utils.sha3(name)
+  getPrekey(name, unixDay, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
 
-    return this.contract.methods.getPrekey(nameHash, unixDay).call(options)
+    return this.contract.methods.getPrekey(nameHash, unixDay).call(otherOptions)
   }
 
-  getMetaData(name, options) {
-    const nameHash = this.web3.utils.sha3(name)
+  getMetaData(name, options = {}) {
+    const {
+      isHash,
+      ...otherOptions
+    } = options
+    const nameHash = isHash ? name : this.web3.utils.sha3(name)
 
-    return this.contract.methods.getMetaData(nameHash).call(options)
+    return this.contract.methods.getMetaData(nameHash).call(otherOptions)
   }
 }
 
