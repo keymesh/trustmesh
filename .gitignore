@@ -12,3 +12,8 @@ secrets.json
 *.swo
 tsconfig.json
 jsconfig.json
+
+migrations/*
+!/migrations/.eslintrc
+!/migrations/1_initial_migration.js
+!/migrations/2_deploy_contracts.js

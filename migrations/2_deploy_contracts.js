@@ -5,5 +5,5 @@ const Messages = artifacts.require('./Messages.sol')
 module.exports = (deployer) => {
   deployer.deploy(Trustbase)
     .then(() => deployer.deploy(PreKeyStore, Trustbase.address))
-    .then(() => deployer.deploy(Messages, Trustbase.address))
+    .then(() => deployer.deploy(Messages))
 }
