@@ -24,7 +24,7 @@
   "scripts": {
     "precommit": "lint-staged",
     "migrate:rinkeby": "truffle migrate --network rinkeby",
-    "prepublish": "npm run migrate:rinkeby"
+    "prepublishOnly": "npm run migrate:rinkeby"
   },
   "eslintIgnore": [
     "web3.lib.js"
