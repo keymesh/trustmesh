@@ -14,7 +14,10 @@ class Trustbase {
     const contract = await getContractInstance(
       contractName,
       abi,
-      Object.assign({ networks }, options)
+      {
+        networks,
+        ...options
+      }
     )
     return new Trustbase(contract)
   }

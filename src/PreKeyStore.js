@@ -18,7 +18,10 @@ class PreKeyStore {
     const contract = await getContractInstance(
       contractName,
       abi,
-      Object.assign({ networks }, options)
+      {
+        networks,
+        ...options
+      }
     )
     return new PreKeyStore(contract)
   }

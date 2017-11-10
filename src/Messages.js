@@ -14,7 +14,10 @@ class Messages {
     const contract = await getContractInstance(
       contractName,
       abi,
-      Object.assign({ networks }, options)
+      {
+        networks,
+        ...options
+      }
     )
     return new Messages(contract)
   }
@@ -25,40 +28,29 @@ class Messages {
     this.contract = contract
   }
 
-  publish(messageType, username, message, options = {}) {
-    const {
-      isHash,
-      ...otherOptions
-    } = options
-    const usernameHash = isHash ? username : this.web3.utils.sha3(username)
-    const messageTypeHash = this.web3.utils.sha3(messageType)
-    return this.contract.methods.publish(messageTypeHash, usernameHash, message).send({
+  publish(message, options = {}) {
+    return this.contract.methods.publish(message).send({
       gas: 200000,
       gasPrice: 20000000000, // 20 Gwei for test
-      ...otherOptions
+      ...options
     })
   }
 
-  async getMessages(messageTypes, options) {
-    const messageTypeHashes = messageTypes.map(messageType => this.web3.utils.sha3(messageType))
+  async getMessages(options = {}) {
     const lastBlock = await this.web3.eth.getBlockNumber()
-    const blockNumberOfContract = await this.contract.methods.blockNumber().call()
 
-    const publishEvents = await this.contract.getPastEvents('Publish', Object.assign({}, {
-      filter: { messageTypeHash: messageTypeHashes },
-      fromBlock: blockNumberOfContract,
-      toBlock: lastBlock
-    }, options))
+    const publishEvents = await this.contract.getPastEvents('Publish', {
+      toBlock: lastBlock,
+      ...options
+    })
 
     const messages = publishEvents
       .map((event) => {
         const {
           blockNumber,
           returnValues: {
-            messageTypeHash,
             message,
-            timestamp,
-            senderUserHash
+            timestamp
           }
         } = event
 
@@ -68,10 +60,8 @@ class Messages {
         }
 
         return {
-          messageTypeHash,
           message,
-          timestamp,
-          senderUserHash
+          timestamp
         }
       })
       .filter(m => m !== null)
