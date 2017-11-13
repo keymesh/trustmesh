@@ -1,65 +1,58 @@
 const Web3 = require('./web3.lib')
 
-const HDWalletProvider = require('./HDWalletProvider')
-const isDev = process.env.NODE_ENV === 'development'
+const TrustbaseError = require('./TrustbaseError')
 
 let web3
 let currentNetworkId
 
-function getWeb3() {
+function checkWeb3() {
   if (web3 === undefined) {
-    throw new Error('You must run web3 configuration first!')
+    throw new TrustbaseError('You must run `trustbase.initialize` to initialize first!', TrustbaseError.CODE.UNINITIALIZED_WEB3)
   }
+}
+
+function getWeb3() {
+  checkWeb3()
   return web3
 }
 
-async function configure(options = {}) {
+async function initialize(options) {
   if (web3 !== undefined) {
-    console.warn('web3 configuration should not call twice!')
-    return
+    throw new TrustbaseError('`trustbase.initialize` should not be invoked twice!', TrustbaseError.CODE.INITIALIZED_ALREADY)
   }
 
-  let provider
-  if (options.provider) {
-    provider = (
-      options.mnemonic
-        ? new HDWalletProvider(options.mnemonic, options.provider, options.index)
-        : options.provider
-    )
+  if (!options.provider) {
+    throw new TrustbaseError('You must provide a provider for initialization', TrustbaseError.CODE.PROVIDER_NOT_PROVIDED)
   }
 
-  web3 = new Web3(isDev ? 'http://localhost:8545' : provider)
+  web3 = new Web3(options.provider)
+
+  currentNetworkId = await web3.eth.net.getId()
 
   const accounts = await web3.eth.getAccounts()
   let defaultAccount = options.defaultAccount
 
   if (defaultAccount) {
+    if (!web3.utils.isAddress(defaultAccount)) {
+      throw new TrustbaseError('Invalid account address', TrustbaseError.CODE.INVALID_ACCOUNT_ADDRESS)
+    }
+
     if (accounts.indexOf(defaultAccount) === -1) {
-      throw new Error('Invalid account address')
+      throw new TrustbaseError(`Account not found in detected network (Network ID: ${currentNetworkId})`, TrustbaseError.CODE.ACCOUNT_NOT_EXIST)
     }
   } else {
-    web3.eth.extend({
-      methods: [{
-        name: 'getAccounts',
-        call: 'eth_accounts'
-      }]
-    })
-
     if (accounts.length === 0) {
-      throw new Error('No account found')
+      throw new TrustbaseError(`No account found in detected network (Network ID: ${currentNetworkId})`, TrustbaseError.CODE.FOUND_NO_ACCOUNT)
     }
 
     defaultAccount = accounts[0]
   }
 
   web3.eth.defaultAccount = defaultAccount
-  currentNetworkId = await web3.eth.net.getId()
 }
 
-async function getContractInstance(contractName, abi, options) {
-  if (web3 === undefined) {
-    throw new Error('You must run web3 configuration first!')
-  }
+function getContractInstance(contractName, abi, options) {
+  checkWeb3()
 
   const {
     networks = {},
@@ -69,24 +62,19 @@ async function getContractInstance(contractName, abi, options) {
   function getAddressFromNetworks() {
     const network = networks[currentNetworkId]
     if (!network) {
-      throw new Error(`${contractName} has not been deployed to detected network (network/artifact mismatch)`)
+      throw new TrustbaseError(`${contractName} has not been deployed to detected network (network/artifact mismatch)`, TrustbaseError.CODE.NETWORK_MISMATCH)
     }
 
     if (!network.address) {
-      throw new Error(`${contractName} has not been deployed to detected network (${currentNetworkId})`)
+      throw new TrustbaseError(`${contractName} has not been deployed to detected network (${currentNetworkId})`, TrustbaseError.CODE.NETWORK_MISMATCH)
     }
 
     return network.address
   }
 
   if (!web3.utils.isAddress(address)) {
-    throw new Error('Invalid contract address')
+    throw new TrustbaseError('Invalid contract address', TrustbaseError.CODE.INVALID_CONTRACT_ADDRESS)
   }
-
-  // const code = await web3.eth.getCode(address)
-  // if (!code || code.replace('0x', '').replace(/0/g, '') === '') {
-  //   throw new Error(`Cannot create instance of ${contractName}; no code at address ${address}`)
-  // }
 
   return new web3.eth.Contract(abi, address, {
     from: web3.eth.defaultAccount
@@ -95,6 +83,6 @@ async function getContractInstance(contractName, abi, options) {
 
 module.exports = {
   getWeb3,
-  configure,
+  initialize,
   getContractInstance
 }

@@ -27093,7 +27093,7 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
         }
 
         var payload = Jsonrpc.toBatchPayload(data);
-        this.provider.send(payload, function (err, results) {
+        this.provider[this.provider.sendAsync ? 'sendAsync' : 'send'](payload, function (err, results) {
           if (err) {
             return callback(err);
           }

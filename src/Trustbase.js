@@ -10,8 +10,8 @@ const {
 } = require('./web3')
 
 class Trustbase {
-  static async new(options = {}) {
-    const contract = await getContractInstance(
+  constructor(options = {}) {
+    const contract = getContractInstance(
       contractName,
       abi,
       {
@@ -19,47 +19,48 @@ class Trustbase {
         ...options
       }
     )
-    return new Trustbase(contract)
-  }
-
-  constructor(contract) {
-    // TODO: prevent calling constructor directly
     this.web3 = getWeb3()
     this.contract = contract
   }
 
-  register(name, identityKey, options = {}) {
+  register(usernameOrUsernameHash, identityPublicKey, options = {}) {
     const {
       isHash,
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.register(nameHash, identityKey).send({
+    return this.contract.methods.register(usernameHash, identityPublicKey).send({
       gas: 100000,
-      gasPrice: 20000000000, // 20 Gwei for test
+      gasPrice: 20000000000, // 20 Gwei
       ...otherOptions
     })
   }
 
-  isOwner(accountAddress, name, options = {}) {
+  isOwner(accountAddress, usernameOrUsernameHash, options = {}) {
     const {
       isHash,
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.isOwner(accountAddress, nameHash).call(otherOptions)
+    return this.contract.methods.isOwner(accountAddress, usernameHash).call(otherOptions)
   }
 
-  getIdentity(name, options = {}) {
+  getIdentity(usernameOrUsernameHash, options = {}) {
     const {
       isHash,
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getIdentity(nameHash).call(otherOptions)
+    return this.contract.methods.getIdentity(usernameHash).call(otherOptions)
   }
 }
 

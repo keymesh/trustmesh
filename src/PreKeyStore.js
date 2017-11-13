@@ -1,8 +1,4 @@
 const {
-  getUnixToday
-} = require('./utils')
-
-const {
   contract_name: contractName,
   abi,
   networks
@@ -13,9 +9,13 @@ const {
   getWeb3
 } = require('./web3')
 
+const {
+  getUnixToday
+} = require('./utils')
+
 class PreKeyStore {
-  static async new(options = {}) {
-    const contract = await getContractInstance(
+  constructor(options = {}) {
+    const contract = getContractInstance(
       contractName,
       abi,
       {
@@ -23,27 +23,24 @@ class PreKeyStore {
         ...options
       }
     )
-    return new PreKeyStore(contract)
-  }
-
-  constructor(contract) {
-    // TODO: prevent calling constructor directly
     this.web3 = getWeb3()
     this.contract = contract
   }
 
-  uploadPrekeys(name, prekeysPublicKeys, options = {}) {
+  uploadPrekeys(usernameOrUsernameHash, prekeyPublicKeys, options = {}) {
     const {
       isHash,
       interval = 1,
       fromUnixDay = getUnixToday(),
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
     return this.contract.methods.addPrekeys(
-      nameHash,
-      prekeysPublicKeys,
+      usernameHash,
+      prekeyPublicKeys,
       fromUnixDay,
       interval
     ).send({
@@ -53,24 +50,28 @@ class PreKeyStore {
     })
   }
 
-  getPrekey(name, unixDay, options = {}) {
+  getPrekey(usernameOrUsernameHash, unixDay, options = {}) {
     const {
       isHash,
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getPrekey(nameHash, unixDay).call(otherOptions)
+    return this.contract.methods.getPrekey(usernameHash, unixDay).call(otherOptions)
   }
 
-  getMetaData(name, options = {}) {
+  getMetaData(usernameOrUsernameHash, options = {}) {
     const {
       isHash,
       ...otherOptions
     } = options
-    const nameHash = isHash ? name : this.web3.utils.sha3(name)
+    const usernameHash = isHash
+      ? usernameOrUsernameHash
+      : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getMetaData(nameHash).call(otherOptions)
+    return this.contract.methods.getMetaData(usernameHash).call(otherOptions)
   }
 }
 

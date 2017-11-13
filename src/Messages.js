@@ -10,8 +10,8 @@ const {
 } = require('./web3')
 
 class Messages {
-  static async new(options = {}) {
-    const contract = await getContractInstance(
+  constructor(options = {}) {
+    const contract = getContractInstance(
       contractName,
       abi,
       {
@@ -19,11 +19,6 @@ class Messages {
         ...options
       }
     )
-    return new Messages(contract)
-  }
-
-  constructor(contract) {
-    // TODO: prevent calling constructor directly
     this.web3 = getWeb3()
     this.contract = contract
   }
