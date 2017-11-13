@@ -1,0 +1,27 @@
+# http://docs.travis-ci.com/user/workers/container-based-infrastructure/
+sudo: false
+
+# http://docs.travis-ci.com/user/languages/javascript-with-nodejs/
+language: node_js
+node_js:
+  - "node"
+
+# http://docs.travis-ci.com/user/notifications/
+notifications:
+  email: false
+
+# https://blog.travis-ci.com/2016-11-21-travis-ci-now-supports-yarn
+cache:
+  yarn: true
+  directories:
+    - node_modules
+
+# https://docs.travis-ci.com/user/languages/javascript-with-nodejs#Node.js-v4-(or-io.js-v3)-compiler-requirements
+env:
+  - CXX=g++-4.8
+addons:
+  apt:
+    sources:
+      - ubuntu-toolchain-r-test
+    packages:
+      - g++-4.8
