@@ -81,8 +81,14 @@ function getContractInstance(contractName, abi, options) {
   })
 }
 
+function getUsernameHash(username) {
+  checkWeb3()
+  return web3.utils.sha3(username)
+}
+
 module.exports = {
   getWeb3,
   initialize,
-  getContractInstance
+  getContractInstance,
+  getUsernameHash
 }

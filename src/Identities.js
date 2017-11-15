@@ -2,18 +2,14 @@ const {
   contract_name: contractName,
   abi,
   networks
-} = require('../build/contracts/PreKeyStore.json')
+} = require('../build/contracts/Identities.json')
 
 const {
   getContractInstance,
   getWeb3
 } = require('./web3')
 
-const {
-  getUnixToday
-} = require('./utils')
-
-class PreKeyStore {
+class Identities {
   constructor(options = {}) {
     const contract = getContractInstance(
       contractName,
@@ -27,30 +23,23 @@ class PreKeyStore {
     this.contract = contract
   }
 
-  uploadPrekeys(usernameOrUsernameHash, prekeyPublicKeys, options = {}) {
+  register(usernameOrUsernameHash, identityPublicKey, options = {}) {
     const {
       isHash,
-      interval = 1,
-      fromUnixDay = getUnixToday(),
       ...otherOptions
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.addPrekeys(
-      usernameHash,
-      prekeyPublicKeys,
-      fromUnixDay,
-      interval
-    ).send({
-      gas: 4712380,
-      gasPrice: 20000000000, // 20 Gwei for test
+    return this.contract.methods.register(usernameHash, identityPublicKey).send({
+      gas: 100000,
+      gasPrice: 20000000000, // 20 Gwei
       ...otherOptions
     })
   }
 
-  getPrekey(usernameOrUsernameHash, unixDay, options = {}) {
+  isOwner(usernameOrUsernameHash, accountAddress, options = {}) {
     const {
       isHash,
       ...otherOptions
@@ -59,10 +48,10 @@ class PreKeyStore {
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getPrekey(usernameHash, unixDay).call(otherOptions)
+    return this.contract.methods.isOwner(usernameHash, accountAddress).call(otherOptions)
   }
 
-  getMetaData(usernameOrUsernameHash, options = {}) {
+  getIdentity(usernameOrUsernameHash, options = {}) {
     const {
       isHash,
       ...otherOptions
@@ -71,8 +60,8 @@ class PreKeyStore {
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getMetaData(usernameHash).call(otherOptions)
+    return this.contract.methods.getIdentity(usernameHash).call(otherOptions)
   }
 }
 
-module.exports = PreKeyStore
+module.exports = Identities

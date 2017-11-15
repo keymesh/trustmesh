@@ -26,7 +26,7 @@ class Messages {
   publish(message, options = {}) {
     return this.contract.methods.publish(message).send({
       gas: 200000,
-      gasPrice: 20000000000, // 20 Gwei for test
+      gasPrice: 20000000000, // 20 Gwei
       ...options
     })
   }
@@ -50,7 +50,7 @@ class Messages {
         } = event
 
         // pending event
-        if (!blockNumber) {
+        if (blockNumber === null) {
           return null
         }
 

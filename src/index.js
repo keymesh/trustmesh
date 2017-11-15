@@ -1,17 +1,19 @@
 const {
   initialize,
-  getWeb3
+  getWeb3,
+  getUsernameHash
 } = require('./web3')
-const Trustbase = require('./Trustbase')
-const PreKeyStore = require('./PreKeyStore')
+const Identities = require('./Identities')
+const PreKeys = require('./PreKeys')
 const Messages = require('./Messages')
 const TrustbaseError = require('./TrustbaseError')
 
 module.exports = {
   getWeb3,
+  getUsernameHash,
   initialize,
-  Trustbase,
-  PreKeyStore,
+  Identities,
+  PreKeys,
   Messages,
   TrustbaseError
 }
