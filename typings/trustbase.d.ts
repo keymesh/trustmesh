@@ -1,7 +1,7 @@
 import * as web3 from './web3.d'
 
 declare interface AsyncProvider {
-  sendAsync(payload: web3.JsonRPCRequest, callback: (e: Error, val: web3.JsonRPCResponse) => void)
+  sendAsync(payload: web3.JsonRPCRequest, callback: (e: Error, val: web3.JsonRPCResponse) => void): void
 }
 
 declare interface InitOptions {
@@ -12,7 +12,7 @@ declare interface InitOptions {
 declare interface ContractOptions {
   networks?: {
     [networkId: number]: {
-      [address: string]: string
+      address: string
     }
   }
   address?: string
@@ -70,7 +70,7 @@ declare enum ErrorCode {
 declare module trustbase {
   function getWeb3(): web3.Web3
   function getUsernameHash(username: string): string
-  function initialize(options: InitOptions): void
+  function initialize(options: InitOptions): Promise<void>
 
   class Identities {
     web3: web3.Web3

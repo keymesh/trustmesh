@@ -1,4 +1,4 @@
-import { BigNumber } from 'bignumber.js' // TODO change to BN
+import { BigNumber } from 'bignumber.js'
 import * as us from 'underscore'
 
 //'{"jsonrpc":"2.0","method":"eth_sendTransaction","params":[{see above}],"id":1}'
@@ -17,9 +17,6 @@ export declare interface JsonRPCResponse {
 
 type Callback<T> = (error: Error, result: T) => void
 type ABIDataTypes = "uint256" | "boolean" | "string" | "bytes" | string // TODO complete list
-export declare interface Provider {
-  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void)
-}
 type PromiEventType = "transactionHash" | "receipt" | "confirmation" | "error"
 export declare interface PromiEvent<T> extends Promise<T> {
   once(type: "transactionHash", handler: (receipt: string) => void): PromiEvent<T>
@@ -33,14 +30,14 @@ export declare interface PromiEvent<T> extends Promise<T> {
   on(type: "error", handler: (error: Error) => void): PromiEvent<T>
   on(type: "error" | "confirmation" | "receipt" | "transactionHash", handler: (error: Error | TransactionReceipt | string) => void): PromiEvent<T>
 }
-declare interface EventEmitter {
+export declare interface EventEmitter {
   on(type: "data", handler: (event: EventLog) => void): EventEmitter
   on(type: "changed", handler: (receipt: EventLog) => void): EventEmitter
   on(type: "error", handler: (error: Error) => void): EventEmitter
   on(type: "error" | "data" | "changed", handler: (error: Error | TransactionReceipt | string) => void): EventEmitter
 }
 
-declare interface TransactionObject<T> {
+export declare interface TransactionObject<T> {
   arguments: any[]
   call(tx?: Tx): Promise<T>
   send(tx?: Tx): PromiEvent<T>
@@ -48,7 +45,7 @@ declare interface TransactionObject<T> {
   encodeABI(): string
 }
 
-declare interface ABIDefinition {
+export declare interface ABIDefinition {
   constant?: boolean
   payable?: boolean
   anonymous?: boolean
@@ -57,7 +54,7 @@ declare interface ABIDefinition {
   outputs?: Array<{ name: string, type: ABIDataTypes }>
   type: "function" | "constructor" | "event" | "fallback"
 }
-declare interface CompileResult {
+export declare interface CompileResult {
   code: string
   info: {
     source: string
@@ -71,7 +68,7 @@ declare interface CompileResult {
 
 
 }
-declare interface Transaction {
+export declare interface Transaction {
   hash: string
   nonce: number
   blockHash: string
@@ -87,7 +84,7 @@ declare interface Transaction {
   r?: string
   s?: string
 }
-declare interface EventLog {
+export declare interface EventLog {
   event: string
   address: string
   returnValues: object
@@ -111,9 +108,25 @@ export declare interface TransactionReceipt {
   logs?: Array<Log>
   events?: {
     [eventName: string]: EventLog
+  },
+  status: string
+}
+export declare interface EncodedTransaction {
+  raw: string,
+  tx: {
+    nonce: string,
+    gasPrice: string,
+    gas: string,
+    to: string,
+    value: string,
+    input: string,
+    v: string,
+    r: string,
+    s: string,
+    hash: string
   }
 }
-declare interface BlockHeader {
+export declare interface BlockHeader {
   number: number
   hash: string
   parentHash: string
@@ -129,20 +142,20 @@ declare interface BlockHeader {
   gasUsed: number
   timestamp: number
 }
-declare interface Block extends BlockHeader {
+export declare interface Block extends BlockHeader {
   transactions: Array<Transaction>
   size: number
   difficulty: number
   totalDifficulty: number
   uncles: Array<string>
 }
-declare interface Logs {
+export declare interface Logs {
   fromBlock?: number
   address?: string
   topics?: Array<string | string[]>
 
 }
-declare interface Log {
+export declare interface Log {
   address: string
   data: string
   topics: Array<string>
@@ -153,7 +166,7 @@ declare interface Log {
   blockNumber: number
 
 }
-declare interface Subscribe<T> {
+export declare interface Subscribe<T> {
   subscription: {
     id: string
     subscribe(callback?: Callback<Subscribe<T>>): Subscribe<T>
@@ -169,13 +182,13 @@ declare interface Subscribe<T> {
   on(type: "changed", handler: (data: T) => void): void
   on(type: "error", handler: (data: Error) => void): void
 }
-declare interface Account {
+export declare interface Account {
   address: string
   privateKey: string
   publicKey: string
 
 }
-declare interface PrivateKey {
+export declare interface PrivateKey {
   address: string
   Crypto: {
     cipher: string,
@@ -197,14 +210,14 @@ declare interface PrivateKey {
   version: number
 }
 
-declare interface Signature {
+export declare interface Signature {
   message: string
   hash: string
   r: string
   s: string
   v: string
 }
-declare interface Tx {
+export declare interface Tx {
   nonce?: string | number
   chainId?: string | number
   from?: string
@@ -213,19 +226,55 @@ declare interface Tx {
   value?: string | number
   gas?: string | number
   gasPrice?: string | number
+
 }
-declare interface WebsocketProvider extends Provider { }
-declare interface HttpProvider extends Provider { }
-declare interface IpcProvider extends Provider { }
+export declare interface IProvider {
+  send(payload: JsonRPCRequest, callback: (e: Error, val: JsonRPCResponse) => void): void
+}
+export declare interface WebsocketProvider extends IProvider {
+  responseCallbacks: object
+  notificationCallbacks: [() => any]
+  connection: {
+    onclose(e: any): void,
+    onmessage(e: any): void,
+    onerror(e?: any): void
+  }
+  addDefaultEvents: () => void
+  on(type: string, callback: () => any): void
+  removeListener(type: string, callback: () => any): void
+  removeAllListeners(type: string): void
+  reset(): void
+}
+export declare interface HttpProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export declare interface IpcProvider extends IProvider {
+  responseCallbacks: undefined
+  notificationCallbacks: undefined
+  connection: undefined
+  addDefaultEvents: undefined
+  on(type: string, callback: () => any): undefined
+  removeListener(type: string, callback: () => any): undefined
+  removeAllListeners(type: string): undefined
+  reset(): undefined
+}
+export type Provider = WebsocketProvider | IpcProvider | HttpProvider;
 type Unit = "kwei" | "femtoether" | "babbage" | "mwei" | "picoether" | "lovelace" | "qwei" | "nanoether" | "shannon" | "microether" | "szabo" | "nano" | "micro" | "milliether" | "finney" | "milli" | "ether" | "kether" | "grand" | "mether" | "gether" | "tether"
 export type BlockType = "latest" | "pending" | "genesis" | number
-declare interface Iban { }
-declare interface Utils {
+export declare interface Iban { }
+export declare interface Utils {
   BN: BigNumber // TODO only static-definition
-  isBN(any): boolean
-  isBigNumber(any): boolean
-  isAddress(any): boolean
-  isHex(any): boolean
+  isBN(any: any): boolean
+  isBigNumber(any: any): boolean
+  isAddress(any: any): boolean
+  isHex(any: any): boolean
   _: us.UnderscoreStatic
   asciiToHex(val: string): string
   hexToAscii(val: string): string
@@ -251,7 +300,7 @@ declare interface Utils {
   randomHex(bytes: number): string
   stringToHex(val: string): string
   toAscii(hex: string): string
-  toBN(any): BigNumber
+  toBN(any: any): BigNumber
   toChecksumAddress(val: string): string
   toDecimal(val: any): number
   toHex(val: any): string
@@ -263,9 +312,13 @@ export declare interface Contract {
   options: {
     address: string
     jsonInterface: ABIDefinition[]
+    data: string
+    from: string
+    gasPrice: string
+    gas: number
   }
   methods: {
-    [fnName: string]: (...args) => TransactionObject<any>
+    [fnName: string]: (...args: any[]) => TransactionObject<any>
   }
   deploy(options: {
     data: string
@@ -281,14 +334,14 @@ export declare interface Contract {
   }
 
 }
-declare interface Request { }
-declare interface Providers {
+export declare interface Request { }
+export declare interface Providers {
   WebsocketProvider: new (host: string, timeout?: number) => WebsocketProvider
   HttpProvider: new (host: string, timeout?: number) => HttpProvider
   IpcProvider: new (path: string, net: any) => IpcProvider
 }
 
-declare class Eth {
+export declare class Eth {
   defaultAccount: string
   defaultBlock: BlockType
   BatchRequest: new () => BatchRequest
@@ -311,7 +364,7 @@ declare class Eth {
   }
   accounts: {
     'new'(entropy?: string): Account
-    privateToAccount(privKey: string): Account
+    privateKeyToAccount(privKey: string): Account
     publicToAddress(key: string): string
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
@@ -374,25 +427,30 @@ declare class Eth {
   isSyncing(cb?: Callback<boolean>): Promise<boolean>
   net: Net
   personal: Personal
+  signTransaction(tx: Tx, address?: string, cb?: Callback<string>): Promise<EncodedTransaction>
   sendSignedTransaction(data: string, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   sendTransaction(tx: Tx, cb?: Callback<string>): PromiEvent<TransactionReceipt>
   submitWork(nonce: string, powHash: string, digest: string, cb?: Callback<boolean>): Promise<boolean>
   sign(address: string, dataToSign: string, cb?: Callback<string>): Promise<string>
-}
-declare class Net {
+
 
 }
-declare class Personal {
+export declare class Net {
+  getId(cb?: Callback<number>): Promise<number>
+  isListening(cb?: Callback<boolean>): Promise<boolean>
+  getPeerCount(cb?: Callback<number>): Promise<number>
+}
+export declare class Personal {
   newAccount(password: string, cb?: Callback<boolean>): Promise<boolean>
   getAccounts(cb?: Callback<Array<string>>): Promise<Array<string>>
-  importRawKey()
-  lockAccount()
-  unlockAccount()
-  sign()
+  importRawKey(): void
+  lockAccount(): void
+  unlockAccount(): void
+  sign(): void
 }
-declare class Shh { }
-declare class Bzz { }
-declare class BatchRequest {
+export declare class Shh { }
+export declare class Bzz { }
+export declare class BatchRequest {
   constructor()
   add(request: Request): void //
   execute(): void
@@ -408,7 +466,7 @@ export declare class Web3 {
     Shh: new (provider: Provider) => Shh
     Bzz: new (provider: Provider) => Bzz
   }
-  constructor(provider: Provider)
+  constructor(provider: Provider | string)
   version: string
   BatchRequest: new () => BatchRequest
   extend(methods: any): any // TODO
