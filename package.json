@@ -1,6 +1,6 @@
 {
   "name": "trustbase",
-  "version": "0.0.9",
+  "version": "0.0.10",
   "description": "Blockchain-based (Ethereum) Public key and message database.",
   "repository": {
     "type": "git",
