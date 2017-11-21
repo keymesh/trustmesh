@@ -14,10 +14,7 @@ class PreKeys {
     const contract = getContractInstance(
       contractName,
       abi,
-      {
-        networks,
-        ...options
-      }
+      Object.assign({ networks }, options)
     )
     this.web3 = getWeb3()
     this.contract = contract
@@ -25,8 +22,7 @@ class PreKeys {
 
   upload(usernameOrUsernameHash, preKeys, options = {}) {
     const {
-      isHash,
-      ...otherOptions
+      isHash
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
@@ -35,28 +31,25 @@ class PreKeys {
     return this.contract.methods.upload(
       usernameHash,
       preKeys
-    ).send({
+    ).send(Object.assign({
       gas: 2000000,
-      gasPrice: 20000000000, // 20 Gwei
-      ...otherOptions
-    })
+      gasPrice: 20000000000 // 20 Gwei
+    }, options))
   }
 
   async getPreKeys(usernameOrUsernameHash, options = {}) {
     const {
-      isHash,
-      ...otherOptions
+      isHash
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    const uploadEvents = await this.contract.getPastEvents('Upload', {
+    const uploadEvents = await this.contract.getPastEvents('Upload', Object.assign({
       filter: { usernameHash },
       fromBlock: 0,
-      toBlock: 'latest',
-      ...otherOptions
-    })
+      toBlock: 'latest'
+    }, options))
 
     let latestPreKeys = ''
     let latestUpdateTime = 0

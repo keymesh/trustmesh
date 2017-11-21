@@ -14,10 +14,7 @@ class Identities {
     const contract = getContractInstance(
       contractName,
       abi,
-      {
-        networks,
-        ...options
-      }
+      Object.assign({ networks }, options)
     )
     this.web3 = getWeb3()
     this.contract = contract
@@ -25,42 +22,38 @@ class Identities {
 
   register(usernameOrUsernameHash, identityPublicKey, options = {}) {
     const {
-      isHash,
-      ...otherOptions
+      isHash
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.register(usernameHash, identityPublicKey).send({
+    return this.contract.methods.register(usernameHash, identityPublicKey).send(Object.assign({
       gas: 100000,
-      gasPrice: 20000000000, // 20 Gwei
-      ...otherOptions
-    })
+      gasPrice: 20000000000 // 20 Gwei
+    }, options))
   }
 
   isOwner(usernameOrUsernameHash, accountAddress, options = {}) {
     const {
-      isHash,
-      ...otherOptions
+      isHash
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.isOwner(usernameHash, accountAddress).call(otherOptions)
+    return this.contract.methods.isOwner(usernameHash, accountAddress).call(options)
   }
 
   getIdentity(usernameOrUsernameHash, options = {}) {
     const {
-      isHash,
-      ...otherOptions
+      isHash
     } = options
     const usernameHash = isHash
       ? usernameOrUsernameHash
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
-    return this.contract.methods.getIdentity(usernameHash).call(otherOptions)
+    return this.contract.methods.getIdentity(usernameHash).call(options)
   }
 }
 

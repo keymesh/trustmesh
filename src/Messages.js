@@ -14,30 +14,25 @@ class Messages {
     const contract = getContractInstance(
       contractName,
       abi,
-      {
-        networks,
-        ...options
-      }
+      Object.assign({ networks }, options)
     )
     this.web3 = getWeb3()
     this.contract = contract
   }
 
   publish(message, options = {}) {
-    return this.contract.methods.publish(message).send({
+    return this.contract.methods.publish(message).send(Object.assign({
       gas: 200000,
-      gasPrice: 20000000000, // 20 Gwei
-      ...options
-    })
+      gasPrice: 20000000000 // 20 Gwei
+    }, options))
   }
 
   async getMessages(options = {}) {
     const lastBlock = await this.web3.eth.getBlockNumber()
 
-    const publishEvents = await this.contract.getPastEvents('Publish', {
-      toBlock: lastBlock,
-      ...options
-    })
+    const publishEvents = await this.contract.getPastEvents('Publish', Object.assign({
+      toBlock: lastBlock
+    }, options))
 
     const messages = publishEvents
       .map((event) => {
