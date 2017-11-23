@@ -56,17 +56,18 @@ function getContractInstance(contractName, abi, options) {
 
   const {
     networks = {},
-    address = getAddressFromNetworks() // eslint-disable-line
+    networkId = currentNetworkId,
+    address = getAddressFromNetworks(), // eslint-disable-line
   } = options
 
   function getAddressFromNetworks() {
-    const network = networks[currentNetworkId]
+    const network = networks[networkId]
     if (!network) {
       throw new TrustbaseError(`${contractName} has not been deployed to detected network (network/artifact mismatch)`, TrustbaseError.CODE.NETWORK_MISMATCH)
     }
 
     if (!network.address) {
-      throw new TrustbaseError(`${contractName} has not been deployed to detected network (${currentNetworkId})`, TrustbaseError.CODE.NETWORK_MISMATCH)
+      throw new TrustbaseError(`${contractName} has not been deployed to detected network (${networkId})`, TrustbaseError.CODE.NETWORK_MISMATCH)
     }
 
     return network.address
@@ -76,9 +77,7 @@ function getContractInstance(contractName, abi, options) {
     throw new TrustbaseError('Invalid contract address', TrustbaseError.CODE.INVALID_CONTRACT_ADDRESS)
   }
 
-  return new web3.eth.Contract(abi, address, {
-    from: web3.eth.defaultAccount
-  })
+  return new web3.eth.Contract(abi, address)
 }
 
 function getUsernameHash(username) {

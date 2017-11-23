@@ -22,6 +22,7 @@ class Messages {
 
   publish(message, options = {}) {
     return this.contract.methods.publish(message).send(Object.assign({
+      from: this.web3.eth.defaultAccount,
       gas: 200000,
       gasPrice: 20000000000 // 20 Gwei
     }, options))

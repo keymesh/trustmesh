@@ -29,6 +29,7 @@ class Identities {
       : this.web3.utils.sha3(usernameOrUsernameHash)
 
     return this.contract.methods.register(usernameHash, identityPublicKey).send(Object.assign({
+      from: this.web3.eth.defaultAccount,
       gas: 100000,
       gasPrice: 20000000000 // 20 Gwei
     }, options))

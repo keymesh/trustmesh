@@ -32,6 +32,7 @@ class PreKeys {
       usernameHash,
       preKeys
     ).send(Object.assign({
+      from: this.web3.eth.defaultAccount,
       gas: 2000000,
       gasPrice: 20000000000 // 20 Gwei
     }, options))

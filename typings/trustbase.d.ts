@@ -16,6 +16,7 @@ declare interface ContractOptions {
     }
   }
   address?: string
+  networkId?: number
 }
 
 declare interface ContractMethodOptions {
@@ -35,12 +36,13 @@ declare interface Identity {
   1: string
 }
 
-declare interface GetPreKeysOption extends UsernameContractMethodOptions {
+declare interface GetPreKeysOption {
+  isHash?: boolean
   fromBlock?: web3.BlockType
   toBlock?: web3.BlockType
 }
 
-declare interface GetMessagesOption extends ContractMethodOptions {
+declare interface GetMessagesOption {
   fromBlock?: web3.BlockType
   toBlock?: web3.BlockType
 }

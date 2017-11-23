@@ -93,7 +93,7 @@ export declare interface EventLog {
   transactionHash: string
   blockHash: string
   blockNumber: number
-  raw?: { data: string, topics: any[] }
+  raw?: { data: string, topics: string[] }
 }
 export declare interface TransactionReceipt {
   transactionHash: string
@@ -328,9 +328,19 @@ export declare interface Contract {
     [eventName: string]: (options?: {
       filter?: object
       fromBlock?: BlockType
-      topics?: any[]
+      topics?: string[]
     }, cb?: Callback<EventLog>) => EventEmitter
-    allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: any[] }, cb?: Callback<EventLog>) => EventEmitter
+    allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: string[] }, cb?: Callback<EventLog>) => EventEmitter
+    getPastEvents(
+      event: string,
+      options?: {
+        filter?: object,
+        fromBlock?: BlockType,
+        toBlock?: BlockType,
+        topics?: string[]
+      },
+      cb?: Callback<EventLog[]>
+    ): Promise<EventLog[]>
   }
 
 }
