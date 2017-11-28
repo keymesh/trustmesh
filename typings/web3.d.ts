@@ -331,19 +331,20 @@ export declare interface Contract {
       topics?: string[]
     }, cb?: Callback<EventLog>) => EventEmitter
     allEvents: (options?: { filter?: object, fromBlock?: BlockType, topics?: string[] }, cb?: Callback<EventLog>) => EventEmitter
-    getPastEvents(
-      event: string,
-      options?: {
-        filter?: object,
-        fromBlock?: BlockType,
-        toBlock?: BlockType,
-        topics?: string[]
-      },
-      cb?: Callback<EventLog[]>
-    ): Promise<EventLog[]>
   }
-
+  getPastEvents(
+    event: string,
+    options?: {
+      filter?: object,
+      fromBlock?: BlockType,
+      toBlock?: BlockType,
+      topics?: string[]
+    },
+    cb?: Callback<EventLog[]>
+  ): Promise<EventLog[]>
 }
+
+
 export declare interface Request { }
 export declare interface Providers {
   WebsocketProvider: new (host: string, timeout?: number) => WebsocketProvider
@@ -379,7 +380,7 @@ export declare class Eth {
     signTransaction(tx: Tx, privateKey: string, returnSignature?: boolean, cb?: (err: Error, result: string | Signature) => void): Promise<string> | Signature
     recoverTransaction(signature: string | Signature): string
     sign(data: string, privateKey: string, returnSignature?: boolean): string | Signature
-    recover(signature: string | Signature): string
+    recover(sigOrHash: string | Signature, sigOrV ?: string, r ?: string, s ?: string): string
     encrypt(privateKey: string, password: string): PrivateKey
     decrypt(privateKey: PrivateKey, password: string): Account
     wallet: {
