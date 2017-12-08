@@ -49,7 +49,7 @@ declare interface GetMessagesOption {
 
 declare interface Message {
   message: string
-  timestamp: number
+  timestamp: string
 }
 
 declare interface QueriedMessages {
