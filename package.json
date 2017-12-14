@@ -1,6 +1,6 @@
 {
   "name": "trustbase",
-  "version": "0.0.11",
+  "version": "0.0.12",
   "description": "Blockchain-based (Ethereum) Public key and message database.",
   "repository": {
     "type": "git",
@@ -36,6 +36,8 @@
     "web3.lib.js"
   ],
   "devDependencies": {
+    "@types/bignumber.js": "^4.0.3",
+    "@types/underscore": "^1.8.5",
     "eslint": "^4.6.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",

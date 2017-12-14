@@ -32,8 +32,10 @@ declare interface UsernameContractMethodOptions extends ContractMethodOptions {
 declare interface Identity {
   owner: string
   publicKey: string
+  blockNumber: number
   0: string
   1: string
+  2: number
 }
 
 declare interface GetPreKeysOption {
