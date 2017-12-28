@@ -1,4 +1,4 @@
-const Web3 = require('./web3.lib')
+const Web3 = require('./web3.lib.min')
 
 const TrustbaseError = require('./TrustbaseError')
 

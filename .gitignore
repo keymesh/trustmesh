@@ -13,6 +13,8 @@ secrets.json
 tsconfig.json
 jsconfig.json
 
+web3.lib.min.js
+
 migrations/*
 !/migrations/.eslintrc
 !/migrations/1_initial_migration.js
