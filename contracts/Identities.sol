@@ -2,29 +2,23 @@ pragma solidity ^0.4.0;
 
 contract Identities {
   struct Account {
-    address owner;
     bytes32 publicKey;
     uint blockNumber;
   }
 
-  mapping (bytes32 => Account) accounts;
+  mapping (address => Account) accounts;
 
-  function register(bytes32 usernameHash, bytes32 publicKey) public {
-    require(accounts[usernameHash].owner == 0);
-    accounts[usernameHash] = Account(msg.sender, publicKey, block.number);
+  function register(bytes32 publicKey) public {
+    require(accounts[msg.sender].publicKey == 0);
+    accounts[msg.sender] = Account(publicKey, block.number);
   }
 
-  function isOwner(bytes32 usernameHash, address userAddress) constant public returns (bool) {
-    return userAddress == accounts[usernameHash].owner;
-  }
-
-  function getIdentity(bytes32 usernameHash)
+  function getIdentity(address userAddress)
     constant
     public
-    returns (address owner, bytes32 publicKey, uint blockNumber) 
+    returns (bytes32 publicKey, uint blockNumber) 
   {
-    owner = accounts[usernameHash].owner;
-    publicKey = accounts[usernameHash].publicKey;
-    blockNumber = accounts[usernameHash].blockNumber;
+    publicKey = accounts[userAddress].publicKey;
+    blockNumber = accounts[userAddress].blockNumber;
   }
 }

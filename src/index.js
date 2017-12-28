@@ -4,7 +4,6 @@ const {
   getUsernameHash
 } = require('./web3')
 const Identities = require('./Identities')
-const PreKeys = require('./PreKeys')
 const Messages = require('./Messages')
 const TrustbaseError = require('./TrustbaseError')
 
@@ -13,7 +12,6 @@ module.exports = {
   getUsernameHash,
   initialize,
   Identities,
-  PreKeys,
   Messages,
   TrustbaseError
 }

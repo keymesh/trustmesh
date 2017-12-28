@@ -25,23 +25,11 @@ declare interface ContractMethodOptions {
   gasPrice?: string | number
 }
 
-declare interface UsernameContractMethodOptions extends ContractMethodOptions {
-  isHash?: boolean
-}
-
 declare interface Identity {
-  owner: string
   publicKey: string
   blockNumber: number
   0: string
-  1: string
-  2: number
-}
-
-declare interface GetPreKeysOption {
-  isHash?: boolean
-  fromBlock?: web3.BlockType
-  toBlock?: web3.BlockType
+  1: number
 }
 
 declare interface GetMessagesOption {
@@ -81,18 +69,8 @@ declare module trustbase {
     contract: web3.Contract
 
     constructor(options?: ContractOptions)
-    register(usernameOrUsernameHash: string, identityPublicKey: string, options?: UsernameContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
-    isOwner(usernameOrUsernameHash: string, accountAddress: string, options?: UsernameContractMethodOptions): Promise<boolean>
-    getIdentity(usernameOrUsernameHash: string, options?: UsernameContractMethodOptions): Promise<Identity>
-  }
-
-  class PreKeys {
-    web3: web3.Web3
-    contract: web3.Contract
-
-    constructor(options?: ContractOptions)
-    upload(usernameOrUsernameHash: string, preKeys: string, options?: UsernameContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
-    getPreKeys(usernameOrUsernameHash: string, options?: GetPreKeysOption): Promise<string>
+    register(identityPublicKey: string, options?: ContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
+    getIdentity(userAddress: string, options?: ContractMethodOptions): Promise<Identity>
   }
 
   class Messages {
