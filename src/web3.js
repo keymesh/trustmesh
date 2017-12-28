@@ -80,7 +80,7 @@ function getContractInstance(contractName, abi, options) {
   return new web3.eth.Contract(abi, address)
 }
 
-function getUsernameHash(username) {
+function sha3(username) {
   return Web3.utils.sha3(username)
 }
 
@@ -88,5 +88,5 @@ module.exports = {
   getWeb3,
   initialize,
   getContractInstance,
-  getUsernameHash
+  sha3
 }

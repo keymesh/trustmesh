@@ -61,7 +61,7 @@ declare enum ErrorCode {
 
 declare module trustbase {
   function getWeb3(): web3.Web3
-  function getUsernameHash(username: string): string
+  function sha3(str: string): string
   function initialize(options: InitOptions): Promise<void>
 
   class Identities {
