@@ -84,9 +84,20 @@ function sha3(username) {
   return Web3.utils.sha3(username)
 }
 
+function asciiToHex(str) {
+  return Web3.utils.asciiToHex(str)
+}
+
+function hexToAscii(hex) {
+  return Web3.utils.hexToAscii(hex)
+}
+
+
 module.exports = {
   getWeb3,
   initialize,
   getContractInstance,
-  sha3
+  sha3,
+  asciiToHex,
+  hexToAscii
 }

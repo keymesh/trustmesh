@@ -47,6 +47,22 @@ declare interface QueriedMessages {
   messages: Array<Message>
 }
 
+declare interface GetBroadcastMessagesOption {
+  fromBlock?: web3.BlockType
+  toBlock?: web3.BlockType
+}
+
+declare interface BroadcastMessage {
+  message: string
+  userAddress: string
+  timestamp: string
+}
+
+declare interface QueriedBroadcastMessages {
+  lastBlock: number
+  broadcastMessages: Array<BroadcastMessage>
+}
+
 declare enum ErrorCode {
   UNKNOWN = 0,
   UNINITIALIZED_WEB3 = 100,
@@ -62,6 +78,8 @@ declare enum ErrorCode {
 declare module trustbase {
   function getWeb3(): web3.Web3
   function sha3(str: string): string
+  function asciiToHex(str: string): string
+  function hexToAscii(hex: string): string
   function initialize(options: InitOptions): Promise<void>
 
   class Identities {
@@ -80,6 +98,15 @@ declare module trustbase {
     constructor(options?: ContractOptions)
     publish(message: string, options?: ContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
     getMessages(options: GetMessagesOption): Promise<QueriedMessages>
+  }
+
+  class BroadcastMessages {
+    web3: web3.Web3
+    contract: web3.Contract
+
+    constructor(options?: ContractOptions)
+    publish(signedMessage: string, userAddress: string, options?: ContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
+    getBroadcastMessages(options: GetBroadcastMessagesOption): Promise<QueriedBroadcastMessages>
   }
 
   class TrustbaseError extends Error {
