@@ -9,6 +9,7 @@ const Identities = require('./Identities')
 const Messages = require('./Messages')
 const TrustbaseError = require('./TrustbaseError')
 const BroadcastMessages = require('./BroadcastMessages')
+const BoundSocials = require('./BoundSocials')
 
 module.exports = {
   getWeb3,
@@ -19,5 +20,6 @@ module.exports = {
   Identities,
   Messages,
   TrustbaseError,
-  BroadcastMessages
+  BroadcastMessages,
+  BoundSocials
 }

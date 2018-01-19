@@ -48,6 +48,7 @@ declare interface QueriedMessages {
 }
 
 declare interface GetBroadcastMessagesOption {
+  filter?: any
   fromBlock?: web3.BlockType
   toBlock?: web3.BlockType
 }
@@ -61,6 +62,24 @@ declare interface BroadcastMessage {
 declare interface QueriedBroadcastMessages {
   lastBlock: number
   broadcastMessages: Array<BroadcastMessage>
+}
+
+declare interface GetBindEventsOption {
+  filter?: {
+    [indexedParam: string]: any
+  }
+  fromBlock?: web3.BlockType
+  toBlock?: web3.BlockType
+}
+
+declare interface BindEvent {
+  userAddress: string,
+  signedBoundSocials: string,
+}
+
+declare interface QueriedBindEvents {
+  lastBlock: number
+  bindEvents: Array<BindEvent>
 }
 
 declare enum ErrorCode {
@@ -106,7 +125,16 @@ declare module trustbase {
 
     constructor(options?: ContractOptions)
     publish(signedMessage: string, userAddress: string, options?: ContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
-    getBroadcastMessages(options: GetBroadcastMessagesOption): Promise<QueriedBroadcastMessages>
+    getBroadcastMessages(options?: GetBroadcastMessagesOption): Promise<QueriedBroadcastMessages>
+  }
+
+  class BoundSocials {
+    web3: web3.Web3
+    contract: web3.Contract
+
+    constructor(options?: ContractOptions)
+    bind(userAddress: string, signedBoundSocials: string,  options?: ContractMethodOptions): web3.PromiEvent<web3.TransactionReceipt>
+    getBindEvents(options?: GetBindEventsOption): Promise<QueriedBindEvents>
   }
 
   class TrustbaseError extends Error {
