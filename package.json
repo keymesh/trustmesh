@@ -26,12 +26,12 @@
     "uglify:web3": "uglifyjs web3/index.js -o src/web3.lib.min.js -c -m",
     "precommit": "lint-staged",
     "migrate": "truffle migrate",
-    "testrpc": "testrpc",
+    "testrpc": "ganache-cli",
     "testrpc:background": "npm run testrpc > testrpc.logs &",
     "test:contract": "truffle test",
     "test": "npm run test:contract",
     "migrate:rinkeby": "truffle migrate --network rinkeby",
-    "prepublishOnly": "npm run migrate:rinkeby && npm run uglify:web3"
+    "prepublishOnly": "node scripts/clean-up-networks.js && npm run migrate:rinkeby && npm run uglify:web3"
   },
   "eslintIgnore": [
     "src/web3.lib.min.js",
@@ -43,8 +43,10 @@
     "eslint": "^4.6.0",
     "eslint-config-airbnb-base": "^12.0.0",
     "eslint-plugin-import": "^2.7.0",
-    "ethereumjs-testrpc": "^6.0.1",
+    "ganache-cli": "^6.0.3",
+    "glob": "^7.1.2",
     "husky": "^0.14.3",
+    "jsonfile": "^4.0.0",
     "lint-staged": "^4.1.3",
     "truffle": "^3.4.11",
     "truffle-hdwallet-provider": "^0.0.3",
