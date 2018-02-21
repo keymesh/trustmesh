@@ -1,18 +1,21 @@
-import Web3 from "web3"
-import { Contract } from "web3/types"
+import Web3 from 'web3'
+import { Contract } from 'web3/types'
 
-import { BaseContract, IDeployInfo } from "./BaseContract"
-import { Identities } from "./Identities"
-import { Messages } from "./Messages"
-import { BoundSocials } from "./BoundSocials"
-import { BroadcastMessages } from "./BroadcastMessages"
+import { BaseContract } from './BaseContract'
+import { Identities } from './Identities'
+import { Messages } from './Messages'
+import { BoundSocials } from './BoundSocials'
+import { BroadcastMessages } from './BroadcastMessages'
 
 /**
  * Construct a web3 Contract instance using deployment information produced by
  * Truffle.
  */
 async function getContract<T extends BaseContract>(
-  Klass: any,
+  Klass: {
+    info: typeof BaseContract.info;
+    new (web3: Web3, contract: Contract): T;
+  },
   web3: Web3,
   netid?: number,
 ): Promise<T> {
@@ -34,7 +37,7 @@ async function getContract<T extends BaseContract>(
   return new Klass(web3, contract)
 }
 
-export async function getContracts(web3: Web3) {
+export async function getContracts(web3: Web3): Promise<ITrustMeshContracts> {
   const netid = await web3.eth.net.getId()
 
   const identities = await getContract<Identities>(Identities, web3, netid)
@@ -50,4 +53,9 @@ export async function getContracts(web3: Web3) {
   }
 }
 
-export { Identities } from "./Identities"
+export interface ITrustMeshContracts {
+  identities: Identities,
+  messages: Messages,
+  boundSocials: BoundSocials,
+  broadcastMessages: BroadcastMessages,
+}

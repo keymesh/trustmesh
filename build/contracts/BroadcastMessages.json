@@ -1,0 +1,100 @@
+{
+  "contract_name": "BroadcastMessages",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "name": "signedMessage",
+          "type": "bytes"
+        }
+      ],
+      "name": "publish",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "signedMessage",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Publish",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6101958061001f6000396000f300606060405263ffffffff7c0100000000000000000000000000000000000000000000000000000000600035041663a45b27b3811461003d575b600080fd5b341561004857600080fd5b6100a96004803573ffffffffffffffffffffffffffffffffffffffff169060446024803590810190830135806020601f820181900481020160405190810160405281815292919060208401838380828437509496506100ab95505050505050565b005b8173ffffffffffffffffffffffffffffffffffffffff167ffd98446fd20fd805a2fad6920c7d6f040068b3dcb79a8768a1b55ffa0dd200cf82426040518080602001838152602001828103825284818151815260200191508051906020019080838360005b838110156101295780820151818401525b602001610110565b50505050905090810190601f1680156101565780820380516001836020036101000a031916815260200191505b50935050505060405180910390a25b50505600a165627a7a72305820d41b5441e4a89e67791e1787b9ac46ea43d15c7a757715fdcffea2aaab2be1430029",
+  "networks": {
+    "4": {
+      "events": {
+        "0xba9d4428bc6398fa9945c8c467ff64882f6a35e4789826a571d13f9911a2c6c1": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "signedMessage",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Publish",
+          "type": "event"
+        },
+        "0xfd98446fd20fd805a2fad6920c7d6f040068b3dcb79a8768a1b55ffa0dd200cf": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "signedMessage",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Publish",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0xf0216a7db14966bce0a4abe0b81a1aa83374cb75",
+      "updated_at": 1519322540041
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1519322540041
+}

@@ -1,11 +1,10 @@
 lib
 .idea/
 .vscode/
-build/
 node_modules/
 npm-debug.log
 yarn-error.log
-secrets.json
+deploy.config.json
 .DS_Store
 *.DS_Store
 *.logs

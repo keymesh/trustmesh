@@ -13,14 +13,16 @@
     "object-literal-sort-keys": false,
     "variable-name": [
       true,
-      "allow-leading-underscore"
+      "allow-leading-underscore",
+      "allow-pascal-case"
     ],
     "ordered-imports": false,
     "no-console": false,
     "quotemark": [
       true,
-      "double"
-    ]
+      "single"
+    ],
+    "no-unused-variable": true
   },
   "rulesDirectory": []
 }

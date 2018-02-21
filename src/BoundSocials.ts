@@ -1,63 +1,33 @@
-import { Tx, PromiEvent, TransactionReceipt, BlockType } from "web3/types"
+import { Tx, PromiEvent, TransactionReceipt, BlockType } from 'web3/types'
 
-import { BaseContract, IDeployInfo } from "./BaseContract"
-import { IEventLogFilter } from "./web3-types"
+import { BaseContract } from './BaseContract'
 
-const info: IDeployInfo = require("../build/contracts/BoundSocials.json")
+import * as info from '../build/contracts/BoundSocials.json'
 
-export interface IBindEvent {
+export class BoundSocials extends BaseContract {
+  public static info = info
+
+  public bind(userAddress: string, signedBoundSocials: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
+    return this.contract.methods.send(userAddress, signedBoundSocials).send(options)
+  }
+
+  public getBindings({ userAddress, ...restOptions }: IGetBindingsOptions = {}): Promise<IQueriedBindings> {
+    return super.getEventsData<IBindings>('Bind', { ...restOptions, filter: { userAddress } })
+  }
+}
+
+export interface IBindings {
   userAddress: string,
   signedBoundSocials: string,
 }
 
-export interface IQueriedBindEvents {
+export interface IQueriedBindings {
   lastBlock: number
-  bindEvents: IBindEvent[]
+  result: IBindings[]
 }
 
-export class BoundSocials extends BaseContract {
-  public static info: IDeployInfo = info
-
-  public bind(userAddress: string, signedBoundSocials: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.bind(userAddress, signedBoundSocials).send({
-      from: this.web3.eth.defaultAccount,
-      gas: 200000,
-      gasPrice: 20000000000, // 20 Gwei
-      ...options,
-    })
-  }
-
-  public async getBindEvents(options: IEventLogFilter = {}): Promise<IQueriedBindEvents> {
-    const lastBlock = await this.web3.eth.getBlockNumber()
-
-    const events = await this.contract.getPastEvents("Bind", Object.assign({
-      toBlock: lastBlock,
-    }, options))
-
-    const bindEvents = events.map((event) => {
-      const {
-        blockNumber,
-      } = event
-
-      const {
-        userAddress,
-        signedBoundSocials,
-      } = event.returnValues as IBindEvent
-
-      // pending event
-      if (blockNumber === null) {
-        return null
-      }
-
-      return {
-        userAddress,
-        signedBoundSocials,
-      }
-    }).filter((m) => m !== null) as IBindEvent[]
-
-    return {
-      lastBlock,
-      bindEvents,
-    }
-  }
+export interface IGetBindingsOptions {
+  fromBlock?: BlockType,
+  toBlock?: BlockType,
+  userAddress?: string,
 }
