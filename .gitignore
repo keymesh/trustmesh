@@ -11,3 +11,4 @@ secrets.json
 *.logs
 *.swp
 *.swo
+*.tgz
