@@ -1,10 +1,10 @@
 {
-  "name": "trustbase",
-  "version": "0.0.17",
-  "description": "Blockchain-based (Ethereum) Public key and message database.",
+  "name": "trustmesh",
+  "version": "0.0.1",
+  "description": "Blockchain-based (Ethereum) public key and message infrastructure",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ceoimon/trustbase.git"
+    "url": "https://github.com/keymesh/trustmesh.git"
   },
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -16,13 +16,10 @@
   "engines": {
     "node": ">=8"
   },
-  "lint-staged": {
-    "*.js": [
-      "eslint --fix",
-      "git add"
-    ]
-  },
+  "lint-staged": {},
   "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
     "precommit": "lint-staged",
     "migrate": "truffle migrate",
     "testrpc": "ganache-cli",

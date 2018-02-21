@@ -1,3 +1,4 @@
+lib
 .idea/
 .vscode/
 build/
@@ -10,7 +11,3 @@ secrets.json
 *.logs
 *.swp
 *.swo
-tsconfig.json
-jsconfig.json
-
-web3.lib.min.js

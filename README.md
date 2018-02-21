@@ -15,3 +15,17 @@ yarn add trustbase
 ## APIs
 
 see [Typings](./typings/trustbase.d.ts)
+
+# Dev
+
+Run testrpc:
+
+```
+npm run testrpc
+```
+
+In another console, run tests:
+
+```
+truffle test
+```
