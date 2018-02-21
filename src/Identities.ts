@@ -1,8 +1,8 @@
-import { Tx, PromiEvent, TransactionReceipt } from 'web3/types'
+import { Tx, PromiEvent, TransactionReceipt } from "web3/types"
 
-import { BaseContract, IDeployInfo } from './BaseContract';
+import { BaseContract, IDeployInfo } from "./BaseContract"
 
-const info: IDeployInfo = require('../build/contracts/Identities.json')
+const info: IDeployInfo = require("../build/contracts/Identities.json")
 
 export interface IIdentity {
   publicKey: string
@@ -19,7 +19,7 @@ export class Identities extends BaseContract {
       // FIXME: can I assume that
       from: this.web3.eth.defaultAccount, // do we really need to set this??
       gas: 100000,
-      gasPrice: 20000000000 // 20 Gwei
+      gasPrice: 20000000000, // 20 Gwei
     }, opts))
   }
 
@@ -27,4 +27,3 @@ export class Identities extends BaseContract {
     return this.contract.methods.getIdentity(userAddress).call(opts)
   }
 }
-

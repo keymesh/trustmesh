@@ -10,7 +10,7 @@ export interface IDeployInfo {
       links: any,
       address: string,
       updated_at: number,
-    }
+    },
   }
 }
 

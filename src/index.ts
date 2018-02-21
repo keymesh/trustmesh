@@ -1,11 +1,11 @@
-import Web3 from 'web3'
-import { Contract } from 'web3/types'
+import Web3 from "web3"
+import { Contract } from "web3/types"
 
-import { BaseContract, IDeployInfo } from './BaseContract'
-import { Identities } from './Identities'
-import { Messages } from './Messages'
-import { BoundSocials } from './BoundSocials'
-import { BroadcastMessages } from './BroadcastMessages'
+import { BaseContract, IDeployInfo } from "./BaseContract"
+import { Identities } from "./Identities"
+import { Messages } from "./Messages"
+import { BoundSocials } from "./BoundSocials"
+import { BroadcastMessages } from "./BroadcastMessages"
 
 /**
  * Construct a web3 Contract instance using deployment information produced by
@@ -50,4 +50,4 @@ export async function getContracts(web3: Web3) {
   }
 }
 
-export { Identities } from './Identities'
+export { Identities } from "./Identities"

@@ -1,7 +1,7 @@
 import { BaseContract, IDeployInfo } from "./BaseContract"
 import { Tx, PromiEvent, TransactionReceipt } from "web3/types"
 
-const info: IDeployInfo = require('../build/contracts/Messages.json')
+const info: IDeployInfo = require("../build/contracts/Messages.json")
 
 export interface IMessage {
   message: string
@@ -28,8 +28,8 @@ export class Messages extends BaseContract {
   public async getMessages(options: Tx = {}): Promise<IQueriedMessages> {
     const lastBlock = await this.web3.eth.getBlockNumber()
 
-    const publishEvents = await this.contract.getPastEvents('Publish', Object.assign({
-      toBlock: lastBlock
+    const publishEvents = await this.contract.getPastEvents("Publish", Object.assign({
+      toBlock: lastBlock,
     }, options))
 
     const messages = publishEvents.map((event) => {
@@ -49,13 +49,13 @@ export class Messages extends BaseContract {
 
       return {
         message,
-        timestamp
+        timestamp,
       }
-    }).filter(m => m !== null) as IMessage[]
+    }).filter((m) => m !== null) as IMessage[]
 
     return {
       lastBlock,
-      messages
+      messages,
     }
   }
 }

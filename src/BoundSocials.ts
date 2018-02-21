@@ -1,9 +1,9 @@
-import { Tx, PromiEvent, TransactionReceipt, BlockType } from 'web3/types'
+import { Tx, PromiEvent, TransactionReceipt, BlockType } from "web3/types"
 
-import { BaseContract, IDeployInfo } from './BaseContract'
-import { IEventLogFilter } from './web3-types'
+import { BaseContract, IDeployInfo } from "./BaseContract"
+import { IEventLogFilter } from "./web3-types"
 
-const info: IDeployInfo = require('../build/contracts/BoundSocials.json')
+const info: IDeployInfo = require("../build/contracts/BoundSocials.json")
 
 // FIXME: Make a PR to web3.js to make this an interface
 
@@ -18,6 +18,7 @@ export interface IQueriedBindEvents {
 }
 
 export class BoundSocials extends BaseContract {
+  public static info: IDeployInfo = info
 
   public bind(userAddress: string, signedBoundSocials: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
     return this.contract.methods.bind(userAddress, signedBoundSocials).send({
@@ -28,11 +29,11 @@ export class BoundSocials extends BaseContract {
     })
   }
 
-  async getBindEvents(options: IEventLogFilter = {}): Promise<IQueriedBindEvents> {
+  public async getBindEvents(options: IEventLogFilter = {}): Promise<IQueriedBindEvents> {
     const lastBlock = await this.web3.eth.getBlockNumber()
 
-    const events = await this.contract.getPastEvents('Bind', Object.assign({
-      toBlock: lastBlock
+    const events = await this.contract.getPastEvents("Bind", Object.assign({
+      toBlock: lastBlock,
     }, options))
 
     const bindEvents = events.map((event) => {
@@ -52,13 +53,13 @@ export class BoundSocials extends BaseContract {
 
       return {
         userAddress,
-        signedBoundSocials
+        signedBoundSocials,
       }
-    }).filter(m => m !== null) as IBindEvent[]
+    }).filter((m) => m !== null) as IBindEvent[]
 
     return {
       lastBlock,
-      bindEvents
+      bindEvents,
     }
   }
 }
