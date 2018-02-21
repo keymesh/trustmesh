@@ -12,7 +12,7 @@ import { BroadcastMessages } from "./BroadcastMessages"
  * Truffle.
  */
 async function getContract<T extends BaseContract>(
-  Klass: any,
+  klass: any,
   web3: Web3,
   netid?: number,
 ): Promise<T> {
@@ -20,18 +20,18 @@ async function getContract<T extends BaseContract>(
     netid = await web3.eth.net.getId()
   }
 
-  const info: IDeployInfo = Klass.info
+  const info: IDeployInfo = klass.info
 
   const network = info.networks[netid]
 
   if (!network) {
-    const className = Klass.name
+    const className = klass.name
     throw new Error(`The contract ${className} is not deployed`)
   }
 
   const contract = new web3.eth.Contract(info.abi, network.address)
 
-  return new Klass(web3, contract)
+  return new klass(web3, contract)
 }
 
 export async function getContracts(web3: Web3) {
