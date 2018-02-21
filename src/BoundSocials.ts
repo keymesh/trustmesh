@@ -5,8 +5,6 @@ import { IEventLogFilter } from "./web3-types"
 
 const info: IDeployInfo = require("../build/contracts/BoundSocials.json")
 
-// FIXME: Make a PR to web3.js to make this an interface
-
 export interface IBindEvent {
   userAddress: string,
   signedBoundSocials: string,

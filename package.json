@@ -20,14 +20,13 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "precommit": "lint-staged",
     "migrate": "truffle migrate",
     "testrpc": "ganache-cli",
     "testrpc:background": "npm run testrpc > testrpc.logs &",
     "test:contract": "truffle test",
     "test": "npm run test:contract",
     "migrate:rinkeby": "truffle migrate --network rinkeby",
-    "prepublishOnly": "node scripts/clean-up-networks.js && npm run migrate:rinkeby && npm run uglify:web3"
+    "prepublishOnly": "node scripts/clean-up-networks.js"
   },
   "eslintIgnore": [
     "src/web3.lib.min.js",
