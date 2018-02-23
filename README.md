@@ -5,7 +5,7 @@ Blockchain-based (Ethereum) Public key and message infrastructure. Can be use to
 ## Installation
 
 ```bash
-yarn add trustmesh
+yarn add @keymesh/trustmesh
 ```
 
 ## APIs
