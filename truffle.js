@@ -45,7 +45,7 @@ function getDeployConfigs(options) {
     ? Number(configPort)
     : Boolean(useHttps) ? 443 : 80
 
-  const provider = networkID !== '*' && mnemonic !== ''
+  const provider = typeof host !== 'undefined' && mnemonic !== ''
     ? new HDWalletProvider(
         mnemonic,
         `${Boolean(useHttps) ? 'https' : 'http'}://${host}:${port}`,
