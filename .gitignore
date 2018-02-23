@@ -4,7 +4,6 @@ lib
 node_modules/
 npm-debug.log
 yarn-error.log
-deploy.config.json
 .DS_Store
 *.DS_Store
 *.logs
