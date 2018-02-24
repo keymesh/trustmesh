@@ -8,7 +8,8 @@ export class BoundSocials extends BaseContract {
   public static info = info
 
   public bind(userAddress: string, signedBoundSocials: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.send(userAddress, signedBoundSocials).send(options)
+    return this.contract.methods.bind(userAddress, signedBoundSocials)
+      .send({ from: this.web3.eth.defaultAccount, ...options })
   }
 
   public getBindings({ userAddress, ...restOptions }: IGetBindingsOptions = {}): Promise<IQueriedBindings> {

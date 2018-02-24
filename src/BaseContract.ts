@@ -19,11 +19,16 @@ export abstract class BaseContract {
       : await this.web3.eth.getBlockNumber()
     )
     const events = await this.contract.getPastEvents(eventName, Object.assign({ toBlock: lastBlock }, options))
-    const result = events.reduce<T[]>(
-      // filter out pending events (blockNumber === null)
-      (_result, event) => event.blockNumber === null ? _result : _result.concat(event.returnValues as T),
-      [],
-    )
+    const result: T[] = []
+
+    for (const event of events) {
+      const isPending = event.blockNumber === null
+      if (isPending) {
+        continue
+      }
+
+      result.push(event.returnValues as T)
+    }
 
     return {
       lastBlock,

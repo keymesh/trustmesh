@@ -8,7 +8,8 @@ export class BroadcastMessages extends BaseContract {
   public static info = info
 
   public publish(userAddress: string, signedMessage: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.publish(userAddress, signedMessage).send(options)
+    return this.contract.methods.publish(userAddress, signedMessage)
+      .send({ from: this.web3.eth.defaultAccount, ...options })
   }
 
   public getBroadcastMessages(

@@ -8,11 +8,13 @@ export class Identities extends BaseContract {
   public static info: IDeployInfo = info
 
   public register(identityPublicKey: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.register(identityPublicKey).send(options)
+    return this.contract.methods.register(identityPublicKey)
+      .send({ from: this.web3.eth.defaultAccount, ...options })
   }
 
   public getIdentity(userAddress: string, options: Tx = {}): Promise<IIdentity> {
-    return this.contract.methods.getIdentity(userAddress).call(options)
+    return this.contract.methods.getIdentity(userAddress)
+      .call({ from: this.web3.eth.defaultAccount, ...options })
   }
 }
 
