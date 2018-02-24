@@ -28,12 +28,8 @@
     "test": "yarn test:contract",
     "cleanup": "truffle networks --clean",
     "prepublishOnly": "yarn cleanup && yarn build && yarn migrate:all",
-    "tslint": "tslint"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "yarn cleanup && lint-staged"
-    }
+    "tslint": "tslint",
+    "precommit": "yarn cleanup && lint-staged"
   },
   "lint-staged": {
     "linters": {
