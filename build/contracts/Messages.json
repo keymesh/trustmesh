@@ -1,0 +1,64 @@
+{
+  "contract_name": "Messages",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "message",
+          "type": "bytes"
+        }
+      ],
+      "name": "publish",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "name": "message",
+          "type": "bytes"
+        },
+        {
+          "indexed": false,
+          "name": "timestamp",
+          "type": "uint256"
+        }
+      ],
+      "name": "Publish",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6101628061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416637fd28346811461003d575b600080fd5b341561004857600080fd5b61008e60046024813581810190830135806020601f8201819004810201604051908101604052818152929190602084018383808284375094965061009095505050505050565b005b7f37febb101ed654b4ac9b521db185a42ac259f2677ff05de62c7fa6e2e05ea60981426040518080602001838152602001828103825284818151815260200191508051906020019080838360005b838110156100f75780820151818401525b6020016100de565b50505050905090810190601f1680156101245780820380516001836020036101000a031916815260200191505b50935050505060405180910390a15b505600a165627a7a72305820b1ba4c3cce8d8dc8d9bc8713d54bb57bba48137284fb776fb35a5644443004480029",
+  "networks": {
+    "4": {
+      "events": {
+        "0x37febb101ed654b4ac9b521db185a42ac259f2677ff05de62c7fa6e2e05ea609": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": false,
+              "name": "message",
+              "type": "bytes"
+            },
+            {
+              "indexed": false,
+              "name": "timestamp",
+              "type": "uint256"
+            }
+          ],
+          "name": "Publish",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x63149f81decaed6921ca6f1a200050f198d6fb4b",
+      "updated_at": 1516603243306
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1519471042578
+}

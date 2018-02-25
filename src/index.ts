@@ -1,18 +1,21 @@
-import Web3 from "web3"
-import { Contract } from "web3/types"
+import Web3 from 'web3'
+import { Contract } from 'web3/types'
 
-import { BaseContract, IDeployInfo } from "./BaseContract"
-import { Identities } from "./Identities"
-import { Messages } from "./Messages"
-import { BoundSocials } from "./BoundSocials"
-import { BroadcastMessages } from "./BroadcastMessages"
+import { BaseContract } from './BaseContract'
+import { Identities } from './Identities'
+import { Messages } from './Messages'
+import { BoundSocials } from './BoundSocials'
+import { BroadcastMessages } from './BroadcastMessages'
 
 /**
  * Construct a web3 Contract instance using deployment information produced by
  * Truffle.
  */
 async function getContract<T extends BaseContract>(
-  klass: any,
+  Klass: {
+    info: typeof BaseContract.info;
+    new (web3: Web3, contract: Contract): T;
+  },
   web3: Web3,
   netid?: number,
 ): Promise<T> {
@@ -20,21 +23,21 @@ async function getContract<T extends BaseContract>(
     netid = await web3.eth.net.getId()
   }
 
-  const info: IDeployInfo = klass.info
+  const info: IDeployInfo = Klass.info
 
   const network = info.networks[netid]
 
   if (!network) {
-    const className = klass.name
+    const className = Klass.name
     throw new Error(`The contract ${className} is not deployed`)
   }
 
   const contract = new web3.eth.Contract(info.abi, network.address)
 
-  return new klass(web3, contract)
+  return new Klass(web3, contract)
 }
 
-export async function getContracts(web3: Web3) {
+export async function getContracts(web3: Web3): Promise<ITrustMeshContracts> {
   const netid = await web3.eth.net.getId()
 
   const identities = await getContract<Identities>(Identities, web3, netid)
@@ -50,4 +53,9 @@ export async function getContracts(web3: Web3) {
   }
 }
 
-export { Identities } from "./Identities"
+export interface ITrustMeshContracts {
+  identities: Identities,
+  messages: Messages,
+  boundSocials: BoundSocials,
+  broadcastMessages: BroadcastMessages,
+}

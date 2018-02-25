@@ -1,0 +1,68 @@
+{
+  "contract_name": "BoundSocials",
+  "abi": [
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "name": "signedBoundSocials",
+          "type": "bytes"
+        }
+      ],
+      "name": "bind",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "signedBoundSocials",
+          "type": "bytes"
+        }
+      ],
+      "name": "Bind",
+      "type": "event"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b61018c8061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416639cef18b2811461003d575b600080fd5b341561004857600080fd5b6100a96004803573ffffffffffffffffffffffffffffffffffffffff169060446024803590810190830135806020601f820181900481020160405190810160405281815292919060208401838380828437509496506100ab95505050505050565b005b8173ffffffffffffffffffffffffffffffffffffffff167fa3903da29f8969b8e2f04262b6fc76de8d1861eb69316d327d9a293e0b6888c28260405160208082528190810183818151815260200191508051906020019080838360005b838110156101215780820151818401525b602001610108565b50505050905090810190601f16801561014e5780820380516001836020036101000a031916815260200191505b509250505060405180910390a25b50505600a165627a7a7230582071a0b5da9fd7d8346cc892c2630eb07db6481d9f0b557e8d11c8b398d9dda5d50029",
+  "networks": {
+    "4": {
+      "events": {
+        "0xa3903da29f8969b8e2f04262b6fc76de8d1861eb69316d327d9a293e0b6888c2": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "signedBoundSocials",
+              "type": "bytes"
+            }
+          ],
+          "name": "Bind",
+          "type": "event"
+        }
+      },
+      "links": {},
+      "address": "0x11ff0d198e999ea7d69506375c4719dcd849d1d3",
+      "updated_at": 1516603363720
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1519471042577
+}

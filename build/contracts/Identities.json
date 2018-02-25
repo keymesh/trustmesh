@@ -1,0 +1,51 @@
+{
+  "contract_name": "Identities",
+  "abi": [
+    {
+      "constant": true,
+      "inputs": [
+        {
+          "name": "userAddress",
+          "type": "address"
+        }
+      ],
+      "name": "getIdentity",
+      "outputs": [
+        {
+          "name": "publicKey",
+          "type": "bytes32"
+        },
+        {
+          "name": "blockNumber",
+          "type": "uint256"
+        }
+      ],
+      "payable": false,
+      "type": "function"
+    },
+    {
+      "constant": false,
+      "inputs": [
+        {
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "register",
+      "outputs": [],
+      "payable": false,
+      "type": "function"
+    }
+  ],
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6101818061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416632fea7b818114610048578063e1fa8e841461008c575b600080fd5b341561005357600080fd5b61007473ffffffffffffffffffffffffffffffffffffffff600435166100a4565b60405191825260208201526040908101905180910390f35b341561009757600080fd5b6100a26004356100d7565b005b73ffffffffffffffffffffffffffffffffffffffff8116600090815260208190526040902080546001909101545b915091565b73ffffffffffffffffffffffffffffffffffffffff33166000908152602081905260409020541561010757600080fd5b6040805190810160409081528282524360208084019190915273ffffffffffffffffffffffffffffffffffffffff331660009081529081905220815181556020820151600190910155505b505600a165627a7a7230582089c1eb2c2ff9f74dbd3a4fe55eefc7f2a64955f327e70752e6c44fa2436dc4c00029",
+  "networks": {
+    "4": {
+      "events": {},
+      "links": {},
+      "address": "0x9f6bbcf011cf37b3037ad50411c2dfb54cd62a3d",
+      "updated_at": 1516603243305
+    }
+  },
+  "schema_version": "0.0.5",
+  "updated_at": 1519471042578
+}

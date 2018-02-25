@@ -1,7 +1,21 @@
-import { BaseContract, IDeployInfo } from "./BaseContract"
-import { Tx, PromiEvent, TransactionReceipt } from "web3/types"
+import { Tx, PromiEvent, TransactionReceipt, BlockType } from 'web3/types'
 
-const info: IDeployInfo = require("../build/contracts/Messages.json")
+import { BaseContract } from './BaseContract'
+
+import * as info from '../build/contracts/Messages.json'
+
+export class Messages extends BaseContract {
+  public static info: IDeployInfo = info
+
+  public publish(message: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
+    return this.contract.methods.publish(message)
+      .send({ from: this.web3.eth.defaultAccount, ...options })
+  }
+
+  public async getMessages(options: IGetMessagesOptions = {}): Promise<IQueriedMessages> {
+    return super.getEventsData<IMessage>('Publish', options)
+  }
+}
 
 export interface IMessage {
   message: string
@@ -10,52 +24,10 @@ export interface IMessage {
 
 export interface IQueriedMessages {
   lastBlock: number
-  messages: IMessage[]
+  result: IMessage[]
 }
 
-export class Messages extends BaseContract {
-  public static info: IDeployInfo = info
-
-  public publish(message: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.publish(message).send({
-      from: this.web3.eth.defaultAccount,
-      gas: 200000,
-      gasPrice: 20000000000, // 20 Gwei
-      ...options,
-    })
-  }
-
-  public async getMessages(options: Tx = {}): Promise<IQueriedMessages> {
-    const lastBlock = await this.web3.eth.getBlockNumber()
-
-    const publishEvents = await this.contract.getPastEvents("Publish", Object.assign({
-      toBlock: lastBlock,
-    }, options))
-
-    const messages = publishEvents.map((event) => {
-      const {
-        blockNumber,
-      } = event
-
-      const {
-        message,
-        timestamp,
-      } = event.returnValues as IMessage
-
-      // pending event
-      if (blockNumber === null) {
-        return null
-      }
-
-      return {
-        message,
-        timestamp,
-      }
-    }).filter((m) => m !== null) as IMessage[]
-
-    return {
-      lastBlock,
-      messages,
-    }
-  }
+export interface IGetMessagesOptions {
+  fromBlock?: BlockType,
+  toBlock?: BlockType,
 }
