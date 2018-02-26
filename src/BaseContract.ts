@@ -156,6 +156,7 @@ export interface IProcessingTransaction {
     requiredConfirmation?: number,
     estimateAverageBlockTime?: number,
     timeoutBlockNumber?: number,
+    onConfirmation?: TypeOnConfirmationCallback,
   ): Promise<TransactionReceipt | undefined>,
   stopGetReceipt(): void,
 }
