@@ -1,5 +1,6 @@
 import Web3 from 'web3'
-import { Contract, BlockType } from 'web3/types'
+import { Contract, BlockType, PromiEvent, TransactionReceipt } from 'web3/types'
+import { sleep } from './utils'
 
 export abstract class BaseContract {
   public static info: IDeployInfo
@@ -9,16 +10,96 @@ export abstract class BaseContract {
     protected contract: Contract,
   ) {}
 
+  public getProcessingTransaction(transactionHash: string): IProcessingTransaction {
+    let isPolling = true
+    let onConfirmationCallback: TypeOnConfirmationCallback | undefined
+
+    const getReceipt = async (
+      requiredConfirmation: number = 0,
+      estimateAverageBlockTime = 15000,
+      timeoutBlockNumber = Infinity,
+    ) => {
+      let blockCounter = 0
+      let isFirstConfirmation = true
+      let firstConfirmedReceiptBlockNumber = 0
+      while (isPolling) {
+        if (blockCounter > timeoutBlockNumber) {
+          throw new Error('Timeout')
+        }
+
+        const receipt = await this.web3.eth.getTransactionReceipt(transactionHash)
+        // not yet confirmed or is pending
+        if (receipt == null || receipt.blockNumber == null) {
+          if (!isFirstConfirmation) {
+            // receipt we had fetched is from a fork chain, reset data
+            firstConfirmedReceiptBlockNumber = 0
+            isFirstConfirmation = true
+          }
+
+          blockCounter++
+          await sleep(estimateAverageBlockTime)
+          continue
+        }
+
+        // check out of gas (or error)
+        const hasStatus = receipt.status != null
+        const hasTransactionError = (
+          hasStatus
+          ? Number(receipt.status) === TRANSACTION_STATUS.FAIL
+          : receipt.gasUsed === receipt.cumulativeGasUsed
+        )
+        if (hasTransactionError) {
+          throw new Error('Transaction process error')
+        }
+
+        const receiptBlockNumber = receipt.blockNumber
+        if (isFirstConfirmation) {
+          firstConfirmedReceiptBlockNumber = receiptBlockNumber
+          isFirstConfirmation = false
+        }
+
+        const confirmationCounter = receiptBlockNumber - firstConfirmedReceiptBlockNumber
+        // wait for more confirmations
+        if (confirmationCounter < requiredConfirmation) {
+          if (onConfirmationCallback != null) {
+            onConfirmationCallback(confirmationCounter)
+          }
+          await sleep(estimateAverageBlockTime)
+          continue
+        }
+
+        // enough confirmation, success
+        return receipt
+      }
+      return
+    }
+
+    const stopGetReceipt = () => {
+      isPolling = false
+    }
+
+    const onConfirmation = (callback: TypeOnConfirmationCallback) => {
+      onConfirmationCallback = callback
+    }
+
+    return {
+      transactionHash,
+      getReceipt,
+      stopGetReceipt,
+      onConfirmation,
+    }
+  }
+
   protected async getEventsData<T extends object>(
     eventName: string,
     options: IEventLogFilter,
   ): Promise<{ lastBlock: number, result: T[] }> {
     const lastBlock = (
-      typeof options.toBlock !== 'undefined'
+      options.toBlock != null
       ? options.toBlock as number
       : await this.web3.eth.getBlockNumber()
     )
-    const events = await this.contract.getPastEvents(eventName, Object.assign({ toBlock: lastBlock }, options))
+    const events = await this.contract.getPastEvents(eventName, { toBlock: lastBlock, ...options })
     const result: T[] = []
 
     for (const event of events) {
@@ -35,6 +116,24 @@ export abstract class BaseContract {
       result,
     }
   }
+
+  protected transactionPromiEventToPromsie(
+    promiEvent: PromiEvent<TransactionReceipt>,
+  ): Promise<IProcessingTransaction> {
+    return new Promise((resolve, reject) => {
+      promiEvent
+        .on('transactionHash', (hash) => {
+          resolve(this.getProcessingTransaction(hash))
+        })
+        .on('error', (error: Error) => {
+          if (error.message.includes('Transaction was not mined within 50 blocks')) {
+            // we don't know whether the tx was confirmed or not. don't do anything.
+            return
+          }
+          reject(error)
+        })
+    })
+  }
 }
 
 // FIXME: Make a PR to web3.js to make this an interface
@@ -43,4 +142,26 @@ export interface IEventLogFilter {
   fromBlock?: BlockType,
   toBlock?: BlockType,
   topics?: string[]
+}
+
+export enum TRANSACTION_STATUS {
+  FAIL = 0,
+  SUCCESS,
+}
+
+export interface IGetReceiptOptions {
+  estimateAverageBlockTime?: number
+}
+
+export type TypeOnConfirmationCallback = (confirmationNumber: number) => void
+
+export interface IProcessingTransaction {
+  transactionHash: string,
+  getReceipt(
+    requiredConfirmation?: number,
+    estimateAverageBlockTime?: number,
+    timeoutBlockNumber?: number,
+  ): Promise<TransactionReceipt | undefined>,
+  stopGetReceipt(): void,
+  onConfirmation(callback: TypeOnConfirmationCallback): void,
 }

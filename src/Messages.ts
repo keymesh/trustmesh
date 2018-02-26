@@ -1,19 +1,20 @@
-import { Tx, PromiEvent, TransactionReceipt, BlockType } from 'web3/types'
+import { Tx, BlockType } from 'web3/types'
 
-import { BaseContract } from './BaseContract'
+import { BaseContract, IProcessingTransaction } from './BaseContract'
 
 import * as info from '../build/contracts/Messages.json'
 
 export class Messages extends BaseContract {
   public static info: IDeployInfo = info
 
-  public publish(message: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.publish(message)
-      .send({ from: this.web3.eth.defaultAccount, ...options })
+  public publish(message: string, options: Tx = {}): Promise<IProcessingTransaction> {
+    return this.transactionPromiEventToPromsie(
+      this.contract.methods.publish(message).send({ from: this.web3.eth.defaultAccount, ...options }),
+    )
   }
 
   public async getMessages(options: IGetMessagesOptions = {}): Promise<IQueriedMessages> {
-    return super.getEventsData<IMessage>('Publish', options)
+    return this.getEventsData<IMessage>('Publish', options)
   }
 }
 

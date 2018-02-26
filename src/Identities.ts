@@ -14,7 +14,7 @@ export class Identities extends BaseContract {
 
   public getIdentity(userAddress: string, options: Tx = {}): Promise<IIdentity> {
     return this.contract.methods.getIdentity(userAddress)
-      .call({ from: this.web3.eth.defaultAccount, ...options })
+      .call(options)
   }
 }
 
