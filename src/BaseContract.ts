@@ -12,12 +12,12 @@ export abstract class BaseContract {
 
   public getProcessingTransaction(transactionHash: string): IProcessingTransaction {
     let isPolling = true
-    let onConfirmationCallback: TypeOnConfirmationCallback | undefined
 
     const getReceipt = async (
       requiredConfirmation: number = 0,
       estimateAverageBlockTime = 15000,
       timeoutBlockNumber = Infinity,
+      onConfirmation?: TypeOnConfirmationCallback,
     ) => {
       let blockCounter = 0
       let isFirstConfirmation = true
@@ -61,8 +61,8 @@ export abstract class BaseContract {
         const confirmationCounter = receiptBlockNumber - firstConfirmedReceiptBlockNumber
         // wait for more confirmations
         if (confirmationCounter < requiredConfirmation) {
-          if (onConfirmationCallback != null) {
-            onConfirmationCallback(confirmationCounter)
+          if (onConfirmation != null) {
+            onConfirmation(confirmationCounter)
           }
           await sleep(estimateAverageBlockTime)
           continue
@@ -78,15 +78,10 @@ export abstract class BaseContract {
       isPolling = false
     }
 
-    const onConfirmation = (callback: TypeOnConfirmationCallback) => {
-      onConfirmationCallback = callback
-    }
-
     return {
       transactionHash,
       getReceipt,
       stopGetReceipt,
-      onConfirmation,
     }
   }
 
@@ -163,5 +158,4 @@ export interface IProcessingTransaction {
     timeoutBlockNumber?: number,
   ): Promise<TransactionReceipt | undefined>,
   stopGetReceipt(): void,
-  onConfirmation(callback: TypeOnConfirmationCallback): void,
 }
