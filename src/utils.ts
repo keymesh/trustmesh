@@ -1,5 +1,5 @@
 import Web3 from 'web3'
-import { PromiEvent, TransactionReceipt } from 'web3/types'
+import { PromiEvent, TransactionReceipt, BlockType } from 'web3/types'
 
 export async function sleep(ms: number) {
   return new Promise((resolve) => {
@@ -34,6 +34,7 @@ export function getProcessingTransactionHandlers(web3: Web3, transactionHash: st
     timeoutBlockNumber = Infinity,
     onConfirmation?: TypeOnConfirmationCallback,
   ) => {
+    let lastBlockNumber: number | null = null
     let blockCounter = 0
     let isFirstConfirmation = true
     let firstConfirmedReceiptBlockNumber = 0
@@ -42,6 +43,7 @@ export function getProcessingTransactionHandlers(web3: Web3, transactionHash: st
         throw new Error('Timeout')
       }
 
+      const currentBlockNumber = await web3.eth.getBlockNumber()
       const receipt = await web3.eth.getTransactionReceipt(transactionHash)
       // not yet confirmed or is pending
       if (receipt == null || receipt.blockNumber == null) {
@@ -51,7 +53,10 @@ export function getProcessingTransactionHandlers(web3: Web3, transactionHash: st
           isFirstConfirmation = true
         }
 
-        blockCounter++
+        if (lastBlockNumber != null) {
+          blockCounter += currentBlockNumber - lastBlockNumber
+        }
+        lastBlockNumber = currentBlockNumber
         await sleep(estimateAverageBlockTime)
         continue
       }
@@ -73,12 +78,13 @@ export function getProcessingTransactionHandlers(web3: Web3, transactionHash: st
         isFirstConfirmation = false
       }
 
-      const confirmationCounter = receiptBlockNumber - firstConfirmedReceiptBlockNumber
+      const confirmationCounter = currentBlockNumber - firstConfirmedReceiptBlockNumber
       // wait for more confirmations
       if (confirmationCounter < requiredConfirmation) {
         if (onConfirmation != null) {
           onConfirmation(confirmationCounter)
         }
+
         await sleep(estimateAverageBlockTime)
         continue
       }
@@ -96,6 +102,18 @@ export function getProcessingTransactionHandlers(web3: Web3, transactionHash: st
   return {
     getReceipt,
     stopGetReceipt,
+  }
+}
+
+export async function getToBlockNumber(web3: Web3, toBlock: BlockType = 'latest'): Promise<number> {
+  switch (toBlock) {
+    case 'genesis':
+      return 0
+    case 'latest':
+    case 'pending':
+      return web3.eth.getBlockNumber()
+    default:
+      return toBlock
   }
 }
 

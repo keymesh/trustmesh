@@ -17,7 +17,7 @@ export class Messages extends BaseContract {
     const transactionHash = await transactionPromiEventToPromise(
       this.contract.methods.publish(message).send({ from: this.web3.eth.defaultAccount, ...options }),
     )
-    const handlers = await getProcessingTransactionHandlers(this.web3, transactionHash)
+    const handlers = getProcessingTransactionHandlers(this.web3, transactionHash)
 
     return {
       transactionHash,
