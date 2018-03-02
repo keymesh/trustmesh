@@ -4,7 +4,7 @@ import { Contract } from 'web3/types'
 import { BaseContract } from './BaseContract'
 import { Identities } from './Identities'
 import { Messages } from './Messages'
-import { BoundSocials } from './BoundSocials'
+import { SocialProofs } from './SocialProofs'
 import { BroadcastMessages } from './BroadcastMessages'
 
 /**
@@ -42,13 +42,13 @@ export async function getContracts(web3: Web3): Promise<ITrustMeshContracts> {
 
   const identities = await getContract<Identities>(Identities, web3, netid)
   const messages = await getContract<Messages>(Messages, web3, netid)
-  const boundSocials = await getContract<BoundSocials>(BoundSocials, web3, netid)
+  const socialProofs = await getContract<SocialProofs>(SocialProofs, web3, netid)
   const broadcastMessages = await getContract<BroadcastMessages>(BroadcastMessages, web3, netid)
 
   return {
     identities,
     messages,
-    boundSocials,
+    socialProofs,
     broadcastMessages,
   }
 }
@@ -56,6 +56,6 @@ export async function getContracts(web3: Web3): Promise<ITrustMeshContracts> {
 export interface ITrustMeshContracts {
   identities: Identities,
   messages: Messages,
-  boundSocials: BoundSocials,
+  socialProofs: SocialProofs,
   broadcastMessages: BroadcastMessages,
 }
