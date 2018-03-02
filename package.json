@@ -19,7 +19,7 @@
   "scripts": {
     "build": "tsc",
     "watch": "tsc -w",
-    "testrpc": "ganache-cli",
+    "testrpc": "ganache-cli -b 5",
     "testrpc:background": "yarn testrpc > testrpc.logs &",
     "migrate": "truffle migrate",
     "migrate:rinkeby": "yarn migrate --network rinkeby",

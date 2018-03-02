@@ -26,7 +26,8 @@ export class SocialProofs extends BaseContract {
 
 export interface IProofEvent {
   userAddress: string
-  signedSocialProofs: string
+  platformName: string
+  data: string
 }
 
 export interface IQueriedProofEvent {
