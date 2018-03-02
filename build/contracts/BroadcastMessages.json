@@ -93,37 +93,8 @@
       "links": {},
       "address": "0xf0216a7db14966bce0a4abe0b81a1aa83374cb75",
       "updated_at": 1519322540041
-    },
-    "1519801684209": {
-      "events": {
-        "0xfd98446fd20fd805a2fad6920c7d6f040068b3dcb79a8768a1b55ffa0dd200cf": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": true,
-              "name": "userAddress",
-              "type": "address"
-            },
-            {
-              "indexed": false,
-              "name": "signedMessage",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "timestamp",
-              "type": "uint256"
-            }
-          ],
-          "name": "Publish",
-          "type": "event"
-        }
-      },
-      "links": {},
-      "address": "0xd24b8b137966c98b0b032b7d5060dc0da0e03ef4",
-      "updated_at": 1519959766091
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1519959766091
+  "updated_at": 1519989849472
 }

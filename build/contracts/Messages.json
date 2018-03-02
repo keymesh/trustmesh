@@ -57,32 +57,8 @@
       "links": {},
       "address": "0x63149f81decaed6921ca6f1a200050f198d6fb4b",
       "updated_at": 1516603243306
-    },
-    "1519801684209": {
-      "events": {
-        "0x37febb101ed654b4ac9b521db185a42ac259f2677ff05de62c7fa6e2e05ea609": {
-          "anonymous": false,
-          "inputs": [
-            {
-              "indexed": false,
-              "name": "message",
-              "type": "bytes"
-            },
-            {
-              "indexed": false,
-              "name": "timestamp",
-              "type": "uint256"
-            }
-          ],
-          "name": "Publish",
-          "type": "event"
-        }
-      },
-      "links": {},
-      "address": "0x31e640ab548e68b6c5e7144b845034f9bcf49e3f",
-      "updated_at": 1519959765106
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1519959765106
+  "updated_at": 1519989819492
 }
