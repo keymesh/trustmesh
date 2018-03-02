@@ -7,13 +7,13 @@ import * as info from '../build/contracts/SocialProofs.json'
 export class SocialProofs extends BaseContract {
   public static info = info
 
-  public proof(
+  public uploadProof(
     userAddress: string,
     platformName: string,
     data: string,
     options: Tx = {},
   ): PromiEvent<TransactionReceipt> {
-    return this.contract.methods.proof(userAddress, platformName, data)
+    return this.contract.methods.uploadProof(userAddress, platformName, data)
       .send({ from: this.web3.eth.defaultAccount, ...options })
   }
 
