@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.18;
 
 contract SocialProofs {
   event ProofEvent(address indexed userAddress, bytes32 indexed platformName, bytes data);

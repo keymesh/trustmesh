@@ -1,4 +1,4 @@
-pragma solidity ^0.4.0;
+pragma solidity ^0.4.18;
 
 contract Messages {
   event Publish(bytes message, uint timestamp);
