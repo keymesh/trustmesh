@@ -8,15 +8,17 @@ contract Identities {
 
   mapping (address => Account) accounts;
 
+  event RegisterOK(address indexed userAddress, bytes32 publicKey);
+
   function register(bytes32 publicKey) public {
-    require(accounts[msg.sender].publicKey == 0);
     accounts[msg.sender] = Account(publicKey, block.number);
+    RegisterOK(msg.sender, publicKey);
   }
 
   function getIdentity(address userAddress)
     constant
     public
-    returns (bytes32 publicKey, uint blockNumber) 
+    returns (bytes32 publicKey, uint blockNumber)
   {
     publicKey = accounts[userAddress].publicKey;
     blockNumber = accounts[userAddress].blockNumber;
