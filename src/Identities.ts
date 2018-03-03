@@ -5,7 +5,7 @@ import { BaseContract } from './BaseContract'
 import * as info from '../build/contracts/Identities.json'
 
 export class Identities extends BaseContract {
-  public static info: IDeployInfo = info
+  public static info = info
 
   public register(identityPublicKey: string, options: Tx = {}): PromiEvent<TransactionReceipt> {
     return this.contract.methods.register(identityPublicKey)
@@ -14,7 +14,7 @@ export class Identities extends BaseContract {
 
   public getIdentity(userAddress: string, options: Tx = {}): Promise<IIdentity> {
     return this.contract.methods.getIdentity(userAddress)
-      .call({ from: this.web3.eth.defaultAccount, ...options })
+      .call(options)
   }
 }
 

@@ -1,5 +1,6 @@
 import Web3 from 'web3'
 import { Contract, BlockType } from 'web3/types'
+import { getToBlockNumber } from './utils'
 
 export abstract class BaseContract {
   public static info: IDeployInfo
@@ -13,12 +14,8 @@ export abstract class BaseContract {
     eventName: string,
     options: IEventLogFilter,
   ): Promise<{ lastBlock: number, result: T[] }> {
-    const lastBlock = (
-      typeof options.toBlock !== 'undefined'
-      ? options.toBlock as number
-      : await this.web3.eth.getBlockNumber()
-    )
-    const events = await this.contract.getPastEvents(eventName, Object.assign({ toBlock: lastBlock }, options))
+    const lastBlock = await getToBlockNumber(this.web3, options.toBlock)
+    const events = await this.contract.getPastEvents(eventName, { toBlock: lastBlock, ...options })
     const result: T[] = []
 
     for (const event of events) {
