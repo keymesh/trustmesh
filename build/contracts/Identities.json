@@ -35,17 +35,52 @@
       "outputs": [],
       "payable": false,
       "type": "function"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "name": "userAddress",
+          "type": "address"
+        },
+        {
+          "indexed": false,
+          "name": "publicKey",
+          "type": "bytes32"
+        }
+      ],
+      "name": "RegisterOK",
+      "type": "event"
     }
   ],
-  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b6101818061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416632fea7b818114610048578063e1fa8e841461008c575b600080fd5b341561005357600080fd5b61007473ffffffffffffffffffffffffffffffffffffffff600435166100a4565b60405191825260208201526040908101905180910390f35b341561009757600080fd5b6100a26004356100d7565b005b73ffffffffffffffffffffffffffffffffffffffff8116600090815260208190526040902080546001909101545b915091565b73ffffffffffffffffffffffffffffffffffffffff33166000908152602081905260409020541561010757600080fd5b6040805190810160409081528282524360208084019190915273ffffffffffffffffffffffffffffffffffffffff331660009081529081905220815181556020820151600190910155505b505600a165627a7a7230582089c1eb2c2ff9f74dbd3a4fe55eefc7f2a64955f327e70752e6c44fa2436dc4c00029",
+  "unlinked_binary": "0x6060604052341561000f57600080fd5b5b61019b8061001f6000396000f300606060405263ffffffff7c01000000000000000000000000000000000000000000000000000000006000350416632fea7b818114610048578063e1fa8e841461008c575b600080fd5b341561005357600080fd5b61007473ffffffffffffffffffffffffffffffffffffffff600435166100a4565b60405191825260208201526040908101905180910390f35b341561009757600080fd5b6100a26004356100d7565b005b73ffffffffffffffffffffffffffffffffffffffff8116600090815260208190526040902080546001909101545b915091565b6040805190810160409081528282524360208084019190915273ffffffffffffffffffffffffffffffffffffffff3316600090815290819052208151815560208201516001909101555073ffffffffffffffffffffffffffffffffffffffff33167fb6f42c44ee1a8496bc045823fdce207904450f9a23245e1e29ac155f9d6c3ad88260405190815260200160405180910390a25b505600a165627a7a72305820e12e01861bda6a644d80e68b3f9e3c4fbfe2490a2852b720861401559e9b2e440029",
   "networks": {
     "4": {
-      "events": {},
+      "events": {
+        "0xb6f42c44ee1a8496bc045823fdce207904450f9a23245e1e29ac155f9d6c3ad8": {
+          "anonymous": false,
+          "inputs": [
+            {
+              "indexed": true,
+              "name": "userAddress",
+              "type": "address"
+            },
+            {
+              "indexed": false,
+              "name": "publicKey",
+              "type": "bytes32"
+            }
+          ],
+          "name": "RegisterOK",
+          "type": "event"
+        }
+      },
       "links": {},
-      "address": "0x9f6bbcf011cf37b3037ad50411c2dfb54cd62a3d",
-      "updated_at": 1516603243305
+      "address": "0x87898b2b8eb4e1ee729cb01a0e29d5630a6317c5",
+      "updated_at": 1520051424485
     }
   },
   "schema_version": "0.0.5",
-  "updated_at": 1519989819492
+  "updated_at": 1520051424485
 }
