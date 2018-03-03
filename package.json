@@ -29,7 +29,7 @@
     "cleanup": "truffle networks --clean",
     "prepublishOnly": "yarn cleanup && yarn build && yarn migrate:all",
     "tslint": "tslint",
-    "precommit": "yarn cleanup && git add build && lint-staged"
+    "precommit2": "yarn cleanup && git add build && lint-staged"
   },
   "lint-staged": {
     "linters": {
@@ -44,10 +44,10 @@
     "web3/index.js"
   ],
   "devDependencies": {
-    "ganache-cli": "^6.0.3",
+    "ganache-cli": "^6.1.0-beta.4",
     "husky": "^0.14.3",
     "lint-staged": "^7.0.0",
-    "truffle": "^3.4.11",
+    "truffle": "^4.1.0",
     "truffle-hdwallet-provider": "^0.0.3",
     "tslint": "^5.9.1",
     "typescript": "^2.7.2",
