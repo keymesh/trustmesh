@@ -1,7 +1,7 @@
 
 interface IDeployInfo {
   contract_name: string,
-  abi: any,
+  abi: IMethodABI[],
   networks: {
     [id: number]: {
       events: any,
@@ -10,6 +10,12 @@ interface IDeployInfo {
       updated_at: number,
     },
   }
+}
+
+interface IMethodABI {
+  type: string,
+  name?: string,
+  inputs: any[],
 }
 
 declare module '../build/contracts/*.json' {

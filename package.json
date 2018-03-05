@@ -29,7 +29,7 @@
     "cleanup": "truffle networks --clean",
     "prepublishOnly": "yarn cleanup && yarn build && yarn migrate:all",
     "tslint": "tslint",
-    "precommit": "yarn cleanup && lint-staged"
+    "precommit": "yarn cleanup && git add build && lint-staged"
   },
   "lint-staged": {
     "linters": {
