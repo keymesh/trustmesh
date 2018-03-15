@@ -1,6 +1,6 @@
 {
   "name": "@keymesh/trustmesh",
-  "version": "0.0.8",
+  "version": "0.0.9",
   "description": "Blockchain-based (Ethereum) public key and message infrastructure",
   "repository": {
     "type": "git",

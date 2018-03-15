@@ -87,7 +87,8 @@ export function getProcessingTransactionHandlers(
       // wait for more confirmations
       if (confirmationCounter < requiredConfirmation) {
         if (onConfirmation != null) {
-          onConfirmation(confirmationCounter)
+          // currentBlockNumber is possibly less than firstConfirmedReceiptBlockNumber.
+          onConfirmation(confirmationCounter < 0 ? 0 : confirmationCounter)
         }
 
         await sleep(estimateAverageBlockTime)
