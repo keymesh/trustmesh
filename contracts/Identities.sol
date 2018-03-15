@@ -8,11 +8,11 @@ contract Identities {
 
   mapping (address => Account) accounts;
 
-  event RegisterOK(address indexed userAddress, bytes32 publicKey);
+  event RegisterOK(address indexed userAddress, bytes32 publicKey, uint blockNumber);
 
   function register(bytes32 publicKey) public {
     accounts[msg.sender] = Account(publicKey, block.number);
-    RegisterOK(msg.sender, publicKey);
+    RegisterOK(msg.sender, publicKey, block.number);
   }
 
   function getIdentity(address userAddress)

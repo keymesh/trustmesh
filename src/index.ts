@@ -53,15 +53,6 @@ export async function getContracts(web3: Web3): Promise<ITrustMeshContracts> {
   }
 }
 
-export {
-  getProcessingTransactionHandlers,
-  // re-export public API's typings
-  IProcessingTransactionHandlers,
-  IProcessingTransaction,
-
-  transactionPromiEventToPromise,
-} from './utils'
-
 export interface ITrustMeshContracts {
   identities: Identities,
   messages: Messages,
